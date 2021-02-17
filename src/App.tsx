@@ -1,5 +1,7 @@
 import React from 'react';
-import MidiPort from './components/ControlBar'
+import MidiPort from './components/ControlBar';
+//import HarmonicMap from './components/HarmonicMap';
+import HarmonicMapOpt from './icons/HarmonicMapOpt';
 
 type EmptyProps = {};
 type AppState = { access: Promise<WebMidi.MIDIAccess> };
@@ -17,6 +19,7 @@ class App extends React.Component<EmptyProps, AppState> {
         </header>
         <MidiPort
           access={this.state.access} />
+        <HarmonicMapOpt />
       </div>
     )
   }
