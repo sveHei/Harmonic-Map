@@ -6,19 +6,31 @@ function Icon() {
       xmlns="http://www.w3.org/2000/svg"
       xmlnsosb="http://www.openswatchbook.org/uri/2009/osb"
       xmlnsXlink="http://www.w3.org/1999/xlink"
+      id="svg8"
       width="210mm"
       height="297mm"
       version="1.1"
       viewBox="0 0 210 297"
     >
-      <defs>
-        <linearGradient osbpaint="solid">
-          <stop offset="0" stopColor="#f42626" stopOpacity="1"></stop>
+      <defs id="defs2">
+        <linearGradient id="linearGradient1476" osbpaint="solid">
+          <stop
+            id="stop1474"
+            offset="0"
+            stopColor="#f42626"
+            stopOpacity="1"
+          ></stop>
         </linearGradient>
         <linearGradient id="linearGradient926" osbpaint="solid">
-          <stop offset="0" stopColor="#ffd10b" stopOpacity="1"></stop>
+          <stop
+            id="stop924"
+            offset="0"
+            stopColor="#ffd10b"
+            stopOpacity="1"
+          ></stop>
         </linearGradient>
         <linearGradient
+          id="linearGradient928"
           x1="70.819"
           x2="75.463"
           y1="83.379"
@@ -27,8 +39,14 @@ function Icon() {
           xlinkHref="#linearGradient926"
         ></linearGradient>
       </defs>
-      <g style={{ mixBlendMode: "normal" }} display="inline" opacity="1">
+      <g
+        id="layer1"
+        style={{ mixBlendMode: "normal" }}
+        display="inline"
+        opacity="1"
+      >
         <path
+          id="horizontal_1_0:1_1"
           fill="none"
           stroke="#000"
           strokeLinecap="butt"
@@ -38,6 +56,7 @@ function Icon() {
           d="M99.219 162.719h10.583"
         ></path>
         <path
+          id="horizontal_0_0:0_1"
           fill="none"
           stroke="#000"
           strokeLinecap="butt"
@@ -47,6 +66,7 @@ function Icon() {
           d="M99.219 141.552h10.583"
         ></path>
         <path
+          id="diagonal_0_0:1_1"
           fill="none"
           stroke="#000"
           strokeDasharray="1.06, 1.06"
@@ -59,6 +79,7 @@ function Icon() {
           d="M97.896 145.52l13.229 13.23"
         ></path>
         <path
+          id="vertical_0_1:1_1"
           fill="none"
           stroke="#000"
           strokeLinecap="butt"
@@ -68,6 +89,7 @@ function Icon() {
           d="M115.094 146.844v10.583"
         ></path>
         <path
+          id="vertical_0_0:1_0"
           fill="none"
           stroke="#000"
           strokeLinecap="butt"
@@ -79,6 +101,7 @@ function Icon() {
         <text
           xmlSpace="preserve"
           style={{ lineHeight: "1.25" }}
+          id="note_0_0"
           x="101.089"
           y="129.388"
           fill="#000"
@@ -91,13 +114,14 @@ function Icon() {
           fontWeight="normal"
           transform="scale(.9002 1.11087)"
         >
-          <tspan x="101.089" y="129.388" strokeWidth="0.265">
+          <tspan id="tspan917" x="101.089" y="129.388" strokeWidth="0.265">
             do
           </tspan>
         </text>
         <text
           xmlSpace="preserve"
           style={{ lineHeight: "1.25" }}
+          id="note_1_0"
           x="101.992"
           y="148.527"
           fill="#000"
@@ -110,13 +134,14 @@ function Icon() {
           fontWeight="normal"
           transform="scale(.9002 1.11087)"
         >
-          <tspan x="101.992" y="148.527" strokeWidth="0.265">
+          <tspan id="tspan917-6" x="101.992" y="148.527" strokeWidth="0.265">
             fa
           </tspan>
         </text>
         <text
           xmlSpace="preserve"
           style={{ lineHeight: "1.25" }}
+          id="note_1_1"
           x="125.527"
           y="148.324"
           fill="#000"
@@ -129,13 +154,14 @@ function Icon() {
           fontWeight="normal"
           transform="scale(.9002 1.11087)"
         >
-          <tspan x="125.527" y="148.324" strokeWidth="0.265">
+          <tspan id="tspan917-6-9" x="125.527" y="148.324" strokeWidth="0.265">
             la
           </tspan>
         </text>
         <text
           xmlSpace="preserve"
           style={{ lineHeight: "1.25" }}
+          id="note_0_1"
           x="124.689"
           y="129.458"
           fill="#000"
@@ -148,11 +174,17 @@ function Icon() {
           fontWeight="normal"
           transform="scale(.9002 1.11087)"
         >
-          <tspan x="124.689" y="129.458" strokeWidth="0.265">
+          <tspan
+            id="tspan917-6-9-6"
+            x="124.689"
+            y="129.458"
+            strokeWidth="0.265"
+          >
             mi
           </tspan>
         </text>
         <path
+          id="horizontal_-1_0:-1_1"
           fill="none"
           stroke="#000"
           strokeLinecap="butt"
@@ -162,6 +194,7 @@ function Icon() {
           d="M99.219 120.385h10.583"
         ></path>
         <path
+          id="diagonal_-1_0:0_1"
           fill="none"
           stroke="#000"
           strokeDasharray="1.06, 1.06"
@@ -174,6 +207,7 @@ function Icon() {
           d="M97.896 124.354l13.229 13.23"
         ></path>
         <path
+          id="vertical_-1_1:0_1"
           fill="none"
           stroke="#000"
           strokeLinecap="butt"
@@ -183,6 +217,7 @@ function Icon() {
           d="M115.094 125.677v10.583"
         ></path>
         <path
+          id="vertical_-1_0:0_0"
           fill="none"
           stroke="#000"
           strokeLinecap="butt"
@@ -194,6 +229,7 @@ function Icon() {
         <text
           xmlSpace="preserve"
           style={{ lineHeight: "1.25" }}
+          id="note_-1_1"
           x="126.097"
           y="109.897"
           fill="#000"
@@ -206,13 +242,19 @@ function Icon() {
           fontWeight="normal"
           transform="scale(.9002 1.11087)"
         >
-          <tspan x="126.097" y="109.897" strokeWidth="0.265">
+          <tspan
+            id="tspan917-6-9-6-9"
+            x="126.097"
+            y="109.897"
+            strokeWidth="0.265"
+          >
             ti
           </tspan>
         </text>
         <text
           xmlSpace="preserve"
           style={{ lineHeight: "1.25" }}
+          id="note_-1_0"
           x="101.205"
           y="109.826"
           fill="#000"
@@ -225,11 +267,12 @@ function Icon() {
           fontWeight="normal"
           transform="scale(.9002 1.11087)"
         >
-          <tspan x="101.205" y="109.826" strokeWidth="0.265">
+          <tspan id="tspan917-2" x="101.205" y="109.826" strokeWidth="0.265">
             so
           </tspan>
         </text>
         <path
+          id="diagonal_-2_0:-1_1"
           fill="none"
           stroke="#fdd000"
           strokeDasharray="1.06, 1.06"
@@ -242,6 +285,7 @@ function Icon() {
           d="M97.896 103.188l13.229 13.229"
         ></path>
         <path
+          id="vertical_-2_0:-1_0"
           fill="none"
           stroke="#000"
           strokeLinecap="butt"
@@ -253,6 +297,7 @@ function Icon() {
         <text
           xmlSpace="preserve"
           style={{ lineHeight: "1.25" }}
+          id="note_-2_0"
           x="101.205"
           y="90.772"
           fill="#fdd000"
@@ -266,16 +311,17 @@ function Icon() {
           transform="scale(.9002 1.11087)"
         >
           <tspan
-            x="102.205"
+            id="tspan917-2-5"
+            x="101.205"
             y="90.772"
             fill="#fdd000"
-            fillOpacity="1"
             strokeWidth="0.265"
           >
             re
           </tspan>
         </text>
         <path
+          id="diagonal_1_0:2_1"
           fill="#002af3"
           fillOpacity="1"
           stroke="#002af3"
@@ -289,6 +335,7 @@ function Icon() {
           d="M97.896 166.688l13.229 13.229"
         ></path>
         <path
+          id="vertical_1_1:2_1"
           fill="none"
           stroke="#000"
           strokeLinecap="butt"
@@ -300,6 +347,7 @@ function Icon() {
         <text
           xmlSpace="preserve"
           style={{ lineHeight: "1.25" }}
+          id="note_2_1"
           x="125.527"
           y="167.379"
           fill="#002af3"
@@ -313,16 +361,17 @@ function Icon() {
           transform="scale(.9002 1.11087)"
         >
           <tspan
+            id="tspan917-6-9-5"
             x="125.527"
             y="167.379"
             fill="#002af3"
-            fillOpacity="1"
             strokeWidth="0.265"
           >
             re
           </tspan>
         </text>
         <path
+          id="horizontal_0_1:0_2"
           fill="none"
           stroke="#f42626"
           strokeLinecap="butt"
@@ -334,6 +383,7 @@ function Icon() {
         <text
           xmlSpace="preserve"
           style={{ lineHeight: "1.25" }}
+          id="note_2_0"
           x="148.202"
           y="129.458"
           fill="#f42626"
@@ -347,16 +397,17 @@ function Icon() {
           transform="scale(.9002 1.11087)"
         >
           <tspan
+            id="tspan917-6-9-6-3"
             x="148.202"
             y="129.458"
             fill="#f42626"
-            fillOpacity="1"
             strokeWidth="0.265"
           >
             si
           </tspan>
         </text>
         <path
+          id="diagonal_-1_1:0_2"
           fill="#f42626"
           fillOpacity="1"
           stroke="#f42626"
@@ -371,6 +422,7 @@ function Icon() {
           opacity="1"
         ></path>
         <path
+          id="horizontal_0_-1:0_0"
           fill="none"
           stroke="#36a900"
           strokeLinecap="butt"
@@ -380,6 +432,7 @@ function Icon() {
           d="M78.052 141.552h10.583"
         ></path>
         <path
+          id="diagonal_0_-1:1_0"
           fill="none"
           stroke="#36a900"
           strokeDasharray="1.06, 1.06"
@@ -394,6 +447,7 @@ function Icon() {
         <text
           xmlSpace="preserve"
           style={{ lineHeight: "1.25" }}
+          id="note_0_-1"
           x="77.575"
           y="129.388"
           fill="#36a900"
@@ -407,16 +461,17 @@ function Icon() {
           transform="scale(.9002 1.11087)"
         >
           <tspan
-            x="79.575"
+            id="tspan917-5"
+            x="77.575"
             y="129.388"
             fill="#36a900"
-            fillOpacity="1"
             strokeWidth="0.265"
           >
             lo
           </tspan>
         </text>
       </g>
+      
     </svg>
   );
 }
