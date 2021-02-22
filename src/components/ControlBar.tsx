@@ -66,8 +66,8 @@ class MidiPort extends React.Component<PortProps, PortState> {
 
   onMIDIMessage(e: WebMidi.MIDIMessageEvent) {
     this.logMidiInfo(e);
-    var inputNote = e.data;
-    var transposedNote = [inputNote[0], inputNote[1] + 12, inputNote[2]];
+    //var inputNote = e.data;
+    //var transposedNote = [inputNote[0], inputNote[1] + 12, inputNote[2]];
   }
 
   logMidiInfo(e: WebMidi.MIDIMessageEvent) {
