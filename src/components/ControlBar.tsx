@@ -28,7 +28,7 @@ export const MidiPort = ({onSelectedInput, webMidiStatus, access} : PortProps) =
       setAvailableInputs(generateAvailableInputs())
       setAvailableOutputs(generateAvailableOutputs())
     }
-  }, [webMidiInitialized])
+  }, [webMidiInitialized, webMidiStatus])
 
 
   if (webMidiStatus === 'initializing') {

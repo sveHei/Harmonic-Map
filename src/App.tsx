@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState } from 'react';
 import WebMidi from 'webmidi';
 import { MidiPort } from './components/ControlBar';
 import { HarmonicMap } from './components/HarmonicMap';
@@ -36,7 +36,7 @@ const App = () => {
         });
       }
     })
-  }, [])
+  }, [state])
 
 
   const onSelectedInput = (e: React.ChangeEvent<HTMLSelectElement>): void => {
