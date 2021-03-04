@@ -1,5 +1,3 @@
-type EmptyProps = {};
-
 type Notes = Array<Note>
 
 interface AppState {
@@ -20,11 +18,6 @@ type PortProps = {
 };
 
 type PortDefinition = {id: string, name: string};
-
-type PortState = {
-  availableOutputs: Array<PortDefinition>;
-  availableInputs: Array<PortDefinition>;
-};
 
 interface MidiInterfaceProps {
   webMidiStatus: WebMidiStatus;
