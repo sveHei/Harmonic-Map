@@ -2,7 +2,6 @@ type Notes = Array<Note>
 
 interface AppState {
   access: Promise<WebMidi.MIDIAccess>,
-  webMidiStatus: WebMidiStatus,
   selected_input?: string,
   pressedKeys: {[key: number]: Note}
 };

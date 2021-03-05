@@ -15,28 +15,25 @@ const App = () => {
 
   const [state, setState] = useState<AppState>({
     access: navigator.requestMIDIAccess(),
-    webMidiStatus: "initializing",
     pressedKeys: {},
   })
 
+  const [webMidiStatus, setWebMidiStatus] = useState<WebMidiStatus>("initializing")
+
   useEffect(() => {
+    
     WebMidi.enable((err) => { 
       if (err) {
         console.log("WebMidi could not be enabled.", err);
-        setState({
-          ...state,
-          webMidiStatus: "error"
-        });
+        setWebMidiStatus("error");
       }
       else {
         console.log("WebMidi enabled!");
-        setState({
-          ...state,
-          webMidiStatus: "initialized"
-        });
+        setWebMidiStatus("initialized")
       }
     })
-  }, [state])
+  
+  }, [])
 
 
   const onSelectedInput = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -88,7 +85,7 @@ const App = () => {
       <MidiPort
         access={state.access}
         onSelectedInput={onSelectedInput}
-        webMidiStatus={state.webMidiStatus}
+        webMidiStatus={webMidiStatus}
       />
       <HarmonicMap
         highlighted={pressedKeys} />
