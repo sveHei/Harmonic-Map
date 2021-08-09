@@ -1,22 +1,30 @@
 type Notes = Array<Note>
 
 interface AppState {
-  access: Promise<WebMidi.MIDIAccess>,
   selected_input?: string,
-  pressedKeys: {[key: number]: Note}
+  pressedKeys: { [key: number]: Note },
+  selectedNotes: Set<String>
 };
 
-type Note = keyof typeof notesToIds;
+type Note =
+  "D" |
+  "G" |
+  "B" |
+  "Ab" |
+  "C" |
+  "E" |
+  "G#" |
+  "F" |
+  "A";
 
-type WebMidiStatus = "initializing"|"initialized"|"error";
+type WebMidiStatus = "initializing" | "initialized" | "error";
 
 type PortProps = {
-  access: Promise<WebMidi.MIDIAccess>;
   onSelectedInput: (a: React.ChangeEvent<HTMLSelectElement>) => void;
   webMidiStatus: WebMidiStatus;
 };
 
-type PortDefinition = {id: string, name: string};
+type PortDefinition = { id: string, name: string };
 
 interface MidiInterfaceProps {
   webMidiStatus: WebMidiStatus;

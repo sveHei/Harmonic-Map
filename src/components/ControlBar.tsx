@@ -1,23 +1,23 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import WebMidi from 'webmidi';
 
-export const MidiPort = ({onSelectedInput, webMidiStatus, access} : PortProps) => {
+export const MidiPort = ({ onSelectedInput, webMidiStatus }: PortProps) => {
   const webMidiInitialized = webMidiStatus === "initialized";
   const [availableInputs, setAvailableInputs] = useState<Array<PortDefinition>>([])
   const [availableOutputs, setAvailableOutputs] = useState<Array<PortDefinition>>([])
-  
+
   function generateAvailableOutputs(): Array<PortDefinition> {
     let outputs = []
     for (const output of WebMidi.outputs) {
-      outputs.push({"id": output.id, "name": output.name});
+      outputs.push({ "id": output.id, "name": output.name });
     }
     return outputs;
   }
 
-  function generateAvailableInputs(): Array<PortDefinition>{
+  function generateAvailableInputs(): Array<PortDefinition> {
     let inputs = []
     for (const input of WebMidi.inputs) {
-      inputs.push({"id": input.id, "name": input.name});
+      inputs.push({ "id": input.id, "name": input.name });
     }
     return inputs;
   }
@@ -32,18 +32,18 @@ export const MidiPort = ({onSelectedInput, webMidiStatus, access} : PortProps) =
 
 
   if (webMidiStatus === 'initializing') {
-      return <div>Initializing...</div>
-    } else if (webMidiStatus === "error") {
-      return <div>There was an error!</div>
-    } else {
-      let availableInputsArr = [];
-      for (const input of availableInputs){
-        availableInputsArr.push(<option key={input.id} value={input.id}>{input.name}</option>)
-      }
-      let availableOutputsArr = [];
-      for (const output of availableOutputs){
-        availableOutputsArr.push(<option key={output.id} value={output.id}>{output.name}</option>)
-      }
+    return <div>Initializing...</div>
+  } else if (webMidiStatus === "error") {
+    return <div>There was an error!</div>
+  } else {
+    let availableInputsArr = [];
+    for (const input of availableInputs) {
+      availableInputsArr.push(<option key={input.id} value={input.id}>{input.name}</option>)
+    }
+    let availableOutputsArr = [];
+    for (const output of availableOutputs) {
+      availableOutputsArr.push(<option key={output.id} value={output.id}>{output.name}</option>)
+    }
     return (
       <div>
         <select onChange={onSelectedInput}>

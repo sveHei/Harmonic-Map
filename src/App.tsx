@@ -1,9 +1,9 @@
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import WebMidi from 'webmidi';
 import { MidiPort } from './components/ControlBar';
-import { HarmonicMap } from './components/HarmonicMap';
+import { HarmonicMap, harmonicInfo } from './components/HarmonicMap';
 
-function MidiToNotes (midiNotes: {[key: number]: Note}) : Notes {
+function MidiToNotes(midiNotes: { [key: number]: Note }): Notes {
   let notes: Notes = [];
   for (const note in midiNotes) {
     notes.push(midiNotes[note]);
@@ -14,15 +14,15 @@ function MidiToNotes (midiNotes: {[key: number]: Note}) : Notes {
 const App = () => {
 
   const [state, setState] = useState<AppState>({
-    access: navigator.requestMIDIAccess(),
     pressedKeys: {},
+    selectedNotes: new Set(),
   })
 
   const [webMidiStatus, setWebMidiStatus] = useState<WebMidiStatus>("initializing")
 
   useEffect(() => {
-    
-    WebMidi.enable((err) => { 
+
+    WebMidi.enable((err) => {
       if (err) {
         console.log("WebMidi could not be enabled.", err);
         setWebMidiStatus("error");
@@ -32,7 +32,7 @@ const App = () => {
         setWebMidiStatus("initialized")
       }
     })
-  
+
   }, [])
 
 
@@ -47,9 +47,9 @@ const App = () => {
     }
 
     const inputId = e.target.value;
-    setState({ 
+    setState({
       ...state,
-      selected_input: inputId 
+      selected_input: inputId
     });
     const input = WebMidi.getInputById(inputId);
 
@@ -57,22 +57,41 @@ const App = () => {
     if (input) {
       input.addListener('noteon', "all",
         (e) => {
-          let pressedKeys = Object.assign(state.pressedKeys, {[e.note.number]: e.note.name as Note});
+          let pressedKeys = Object.assign(state.pressedKeys, { [e.note.number]: e.note.name as Note });
           setState({
             ...state,
-            pressedKeys: pressedKeys});
+            pressedKeys: pressedKeys
+          });
         }
       );
       input.addListener('noteoff', "all",
-         (e) => {
+        (e) => {
           const pressedKeys = Object.assign(state.pressedKeys);
           delete pressedKeys[e.note.number];
           setState({
             ...state,
-            pressedKeys: pressedKeys});
+            pressedKeys: pressedKeys
+          });
         }
       );
     }
+  }
+
+  const onClickNote = (note: String) => {
+    console.log(note);
+    setState((state) => {
+      let set = new Set(state.selectedNotes);
+      if (set.has(note)) {
+        set.delete(note);
+      } else {
+        set.add(note);
+        let harmonicNote = harmonicInfo.find(info => note === info.uniqueName)
+        harmonicInfo.forEach(({ uniqueName, midiNote }) => {
+          if (midiNote === harmonicNote?.midiNote && note !== uniqueName) { set.delete(uniqueName); }
+        });
+      }
+      return { ...state, selectedNotes: set }
+    })
   }
 
   const pressedKeys = MidiToNotes(state.pressedKeys)
@@ -83,12 +102,13 @@ const App = () => {
         Harmonic Map
       </header>
       <MidiPort
-        access={state.access}
         onSelectedInput={onSelectedInput}
         webMidiStatus={webMidiStatus}
       />
       <HarmonicMap
-        highlighted={pressedKeys} />
+        highlighted={pressedKeys}
+        onClickNote={onClickNote}
+        selected={state.selectedNotes} />
     </div>
   )
 
