@@ -2,6 +2,10 @@ import React from "react";
 // Generated with https://svg2jsx.com/
 // Removed fillOpacity="1"
 // Changed v_, h_ and d_ to e_ for edge
+// Some horizontal_ ids changed to e_
+// Changed e_0_-1:0_0-7 to e_-1_-1:0_-1
+// Changed the so_do edge from e_-1_0:0_0 to e_0_-1:0_0
+
 function Icon() {
   return (
     <svg
@@ -422,7 +426,7 @@ function Icon() {
           opacity="1"
         ></path>
         <path
-          id="horizontal_0_-1:0_0"
+          id="e_-1_0:0_0"
           fill="none"
           stroke="#36a900"
           strokeLinecap="butt"
@@ -472,7 +476,7 @@ function Icon() {
           </tspan>
         </text>
         <path
-          id="horizontal_0_-1:0_0-7"
+          id="e_-1_-1:0_-1"
           fill="none"
           stroke="#36a900"
           strokeLinecap="butt"
@@ -689,7 +693,7 @@ function Icon() {
           </tspan>
         </text>
         <path
-          id="horizontal_1_0:1_1-7"
+          id="e_1_0:1_1-7"
           fill="none"
           stroke="#002af3"
           strokeLinecap="butt"
@@ -1466,7 +1470,7 @@ function Icon() {
           d="M115.094 189.177v10.583"
         ></path>
         <path
-          id="horizontal_0_1:0_2-9-7-1"
+          id="e_0_1:0_2-9-7-1"
           fill="none"
           stroke="#f42626"
           strokeLinecap="butt"
