@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import WebMidi from 'webmidi';
+import React, { useEffect, useRef, useState } from 'react';
+import webmidi from 'webmidi';
+import WebMidi, { InputEventNoteoff, InputEventNoteon } from 'webmidi';
+import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
-import { HarmonicMap, harmonicInfo } from './components/HarmonicMap';
+import { HarmonicMap, harmonicInfo, generateCorrections, numMidiNotes, noteToChannel } from './components/HarmonicMap';
+import { Tuner } from './components/Tuner';
 
 function MidiToNotes(midiNotes: { [key: number]: Note }): Notes {
   let notes: Notes = [];
@@ -11,12 +14,27 @@ function MidiToNotes(midiNotes: { [key: number]: Note }): Notes {
   return notes;
 }
 
+function usePrevious<t>(value: t): t | undefined {
+  const ref = useRef<t>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
+
+// Using global variable as we need to read it outside of the React state
+// lifecycle, always from the same reference, on the WebMidi listeners
+let selectedOutput: string;
+
 const App = () => {
 
   const [state, setState] = useState<AppState>({
     pressedKeys: {},
     selectedNotes: new Set(),
   })
+  const [inputState, setInputState] = useState<InputState>({});
+  const previousSelectedNotes = usePrevious(state.selectedNotes);
 
   const [webMidiStatus, setWebMidiStatus] = useState<WebMidiStatus>("initializing")
 
@@ -38,8 +56,8 @@ const App = () => {
 
   const onSelectedInput = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     // Cleanup old input
-    if (state.selected_input) {
-      const oldInput = WebMidi.getInputById(state.selected_input);
+    if (inputState.selected_input) {
+      const oldInput = WebMidi.getInputById(inputState.selected_input);
       if (oldInput) {
         oldInput.removeListener('noteon');
         oldInput.removeListener('noteoff');
@@ -47,9 +65,9 @@ const App = () => {
     }
 
     const inputId = e.target.value;
-    setState({
-      ...state,
-      selected_input: inputId
+    setInputState({
+      ...inputState,
+      selected_input: inputId,
     });
     const input = WebMidi.getInputById(inputId);
 
@@ -74,10 +92,44 @@ const App = () => {
           });
         }
       );
+
+      input.addListener('noteon', 'all', (event) => {
+        let output = WebMidi.getOutputById(selectedOutput);
+        if (output) {
+          output.playNote(event.note.number, noteToChannel(event.note.number), { velocity: event.velocity });
+        }
+      });
+
+      input.addListener('noteoff', 'all', (event) => {
+        let output = WebMidi.getOutputById(selectedOutput);
+        if (output) {
+          output.stopNote(event.note.number, noteToChannel(event.note.number));
+        }
+      });
     }
   }
 
-  const onClickNote = (note: String) => {
+  const onSelectedOutput = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    // Cleanup old sounding notes in previous output
+    let oldOutput = WebMidi.getOutputById(selectedOutput);
+    oldOutput && oldOutput.sendStop();
+
+    selectedOutput = e.target.value;
+    sendTuning();
+  }
+
+  const sendTuning = () => {
+    // Rely note to output
+    let output = WebMidi.getOutputById(selectedOutput);
+    if (output) {
+      let corrections = generateCorrections(state.selectedNotes);
+      for (const [midiNote, correction] of corrections.entries()) {
+        output.sendPitchBend((correction ?? 0) / 100, noteToChannel(midiNote));
+      }
+    }
+  }
+
+  const onClickNote = (note: string) => {
     console.log(note);
     setState((state) => {
       let set = new Set(state.selectedNotes);
@@ -96,6 +148,10 @@ const App = () => {
 
   const pressedKeys = MidiToNotes(state.pressedKeys)
 
+  if (webMidiStatus === "initialized" && !_.isEqual(previousSelectedNotes, state.selectedNotes)) {
+    sendTuning();
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -103,12 +159,15 @@ const App = () => {
       </header>
       <MidiPort
         onSelectedInput={onSelectedInput}
+        onSelectedOutput={onSelectedOutput}
         webMidiStatus={webMidiStatus}
+        selectedNotes={state.selectedNotes}
       />
       <HarmonicMap
         highlighted={pressedKeys}
         onClickNote={onClickNote}
         selected={state.selectedNotes} />
+      <Tuner selected={state.selectedNotes} />
     </div>
   )
 
