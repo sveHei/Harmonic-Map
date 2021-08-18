@@ -1,5 +1,4 @@
 import React, { MouseEvent } from 'react'
-import HarmonicMapOpt from '../icons/HarmonicMapOpt';
 import HarmonicMapOpt2 from '../icons/Harmonic_map_complete_simple'; // Generated with https://svg2jsx.com/
 
 type Coord = [number, number];
@@ -205,8 +204,6 @@ export const HarmonicMap = ({ highlighted, onClickNote, selected }: HarmonicMapP
       }
     }
   }
-
-  const edgeHighlightedIds = ["#e_0_0\\3A 0_1", "#e_0_0\\3A 1_0", "#e_0_0\\3A 1_1"];
 
   return (
     <div onClick={onClickEvent}>

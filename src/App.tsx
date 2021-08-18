@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import webmidi from 'webmidi';
-import WebMidi, { InputEventNoteoff, InputEventNoteon } from 'webmidi';
+import WebMidi from 'webmidi';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
-import { HarmonicMap, harmonicInfo, generateCorrections, numMidiNotes, noteToChannel } from './components/HarmonicMap';
+import { HarmonicMap, harmonicInfo, generateCorrections, noteToChannel } from './components/HarmonicMap';
 import { Tuner } from './components/Tuner';
 
 function MidiToNotes(midiNotes: { [key: number]: Note }): Notes {
