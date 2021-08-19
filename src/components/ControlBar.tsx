@@ -67,7 +67,7 @@ export const MidiPort = ({ onSelectedInput, onSelectedOutput, webMidiStatus, sel
     });
 
     return (
-      <div style={{ width: 350, "float": "right" }}>
+      <div style={{ width: 350, "float": "left" }}>
         <select onChange={onSelectedInput}>
           <option id="inputs" key="inital_input">-- inputs --</option>
           {/* {this.state.availableInputs} */}
