@@ -5,6 +5,8 @@ import { MidiPort } from './components/ControlBar';
 import { HarmonicMap, harmonicInfo, generateCorrections, noteToChannel, numMidiNotes } from './components/HarmonicMap';
 import { Tuner } from './components/Tuner';
 
+const PITCH_RANGE = 48;
+
 function MidiToNotes(midiNotes: { [key: number]: Note }): Notes {
   let notes: Notes = [];
   for (const note in midiNotes) {
@@ -122,7 +124,8 @@ const App = () => {
     let output = WebMidi.getOutputById(selectedOutput);
     if (output) {
       for (let i = 0; i < numMidiNotes; i++) {
-        output.setPitchBendRange(2, 0, noteToChannel(i));
+        // TODO: Testing with Abbleton Live this doesn't seem to be working right. Setting it to the MPE default for now.
+        output.setPitchBendRange(PITCH_RANGE * 2, 0, noteToChannel(i));
       }
     }
   }
@@ -133,7 +136,7 @@ const App = () => {
     if (output) {
       let corrections = generateCorrections(state.selectedNotes);
       for (const [midiNote, correction] of corrections.entries()) {
-        output.sendPitchBend((correction ?? 0) / 100, noteToChannel(midiNote));
+        output.sendPitchBend(((correction ?? 0) / 100) / PITCH_RANGE, noteToChannel(midiNote));
       }
     }
   }
