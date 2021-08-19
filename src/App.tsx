@@ -100,6 +100,7 @@ const App = () => {
       input.addListener('noteon', 'all', (event) => {
         let output = WebMidi.getOutputById(selectedOutput);
         if (output) {
+          sendTuning();
           output.playNote(event.note.number, noteToChannel(event.note.number), { velocity: event.velocity });
         }
       });
@@ -137,7 +138,7 @@ const App = () => {
     // Rely note to output
     let output = WebMidi.getOutputById(selectedOutput);
     if (output) {
-      let corrections = generateCorrections(state.selectedNotes);
+      let corrections = generateCorrections(stateRef.current.selectedNotes);
       for (const [midiNote, correction] of corrections.entries()) {
         output.sendPitchBend(((correction ?? 0) / 100) / PITCH_RANGE, noteToChannel(midiNote));
       }
@@ -147,7 +148,7 @@ const App = () => {
   const onClickNote = (note: string) => {
     console.log(note);
     setState((state) => {
-      let set = new Set(state.selectedNotes);
+      let set = new Set(stateRef.current.selectedNotes);
       if (set.has(note)) {
         set.delete(note);
       } else {
@@ -163,7 +164,7 @@ const App = () => {
 
   const pressedKeys = MidiToNotes(state.pressedKeys)
 
-  if (webMidiStatus === "initialized" && !_.isEqual(previousSelectedNotes, state.selectedNotes)) {
+  if (webMidiStatus === "initialized" && !_.isEqual(previousSelectedNotes, stateRef.current.selectedNotes)) {
     sendTuning();
   }
 
