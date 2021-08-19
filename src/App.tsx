@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import WebMidi from 'webmidi';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
-import { HarmonicMap, harmonicInfo, generateCorrections, noteToChannel } from './components/HarmonicMap';
+import { HarmonicMap, harmonicInfo, generateCorrections, noteToChannel, numMidiNotes } from './components/HarmonicMap';
 import { Tuner } from './components/Tuner';
 
 function MidiToNotes(midiNotes: { [key: number]: Note }): Notes {
@@ -114,7 +114,17 @@ const App = () => {
     oldOutput && oldOutput.sendStop();
 
     selectedOutput = e.target.value;
+    sendPitchBendRange();
     sendTuning();
+  }
+
+  const sendPitchBendRange = () => {
+    let output = WebMidi.getOutputById(selectedOutput);
+    if (output) {
+      for (let i = 0; i < numMidiNotes; i++) {
+        output.setPitchBendRange(2, 0, noteToChannel(i));
+      }
+    }
   }
 
   const sendTuning = () => {
