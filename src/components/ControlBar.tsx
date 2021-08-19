@@ -63,7 +63,7 @@ export const MidiPort = ({ onSelectedInput, onSelectedOutput, webMidiStatus, sel
       }
       let tuning = correction !== null ? showWithSign(correction) + " cents" : "";
       const names = removeDuplicates(byMidiNote[midiNote].map((el) => el.eqTmpName)).join("/");
-      return <li key={names}> {names} : {"Equally tempered tuning" + tuning} </li>
+      return <li key={names}> {names} : {"12TET" + tuning} </li>
     });
 
     return (
