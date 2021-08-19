@@ -34,6 +34,8 @@ const App = () => {
     pressedKeys: {},
     selectedNotes: new Set(),
   })
+  const stateRef = useRef(state);
+  stateRef.current = state;
   const [inputState, setInputState] = useState<InputState>({});
   const previousSelectedNotes = usePrevious(state.selectedNotes);
 
@@ -77,19 +79,19 @@ const App = () => {
       input.addListener('noteon', "all",
         (e) => {
           const uniqueNames = byField("midiNote")[e.note.number % 12];
-          let pressedKeys = Object.assign(state.pressedKeys, { [e.note.number]: [...uniqueNames.map((e) => e.uniqueName)] });
+          let pressedKeys = Object.assign(stateRef.current.pressedKeys, { [e.note.number]: [...uniqueNames.map((e) => e.uniqueName)] });
           setState({
-            ...state,
+            ...stateRef.current,
             pressedKeys: pressedKeys
           });
         }
       );
       input.addListener('noteoff', "all",
         (e) => {
-          const pressedKeys = Object.assign(state.pressedKeys);
+          const pressedKeys = Object.assign(stateRef.current.pressedKeys);
           delete pressedKeys[e.note.number];
           setState({
-            ...state,
+            ...stateRef.current,
             pressedKeys: pressedKeys
           });
         }
