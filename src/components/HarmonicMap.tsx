@@ -150,7 +150,7 @@ export function generateCorrections(selectedNotes: Set<string>) {
 
 
 type HarmonicMapProps = {
-  highlighted: Array<Note>,
+  highlighted: Array<string>,
   onClickNote: (ev: string) => void,
   selected: Set<string>,
 }
@@ -163,7 +163,7 @@ export const HarmonicMap = ({ highlighted, onClickNote, selected }: HarmonicMapP
   // Choose svg ids to hide
   let transparentIds = [];
   for (const note of harmonicInfo) {
-    if (!highlighted.includes(note.eqTmpName)) {
+    if (!highlighted.includes(note.uniqueName)) {
       transparentIds.push("#" + note.svgId)
     }
   }
@@ -191,16 +191,16 @@ export const HarmonicMap = ({ highlighted, onClickNote, selected }: HarmonicMapP
     }
   };
 
-  const byEqTempName = byField("eqTmpName");
+  // const byEqTempName = byField("eqTmpName");
   let highlightedEdges: Array<string> = [];
-  let highlightedEntries: Array<HarmonicEntry> = [];
-  for (const element of highlighted) {
-    highlightedEntries = [...highlightedEntries, ...byEqTempName[element]]
-  }
+  let highlightedEntries: Array<string> = [...highlighted];
+  // for (const element of highlighted) {
+  //   highlightedEntries = [...highlightedEntries, element]
+  // }
   for (const [i1, h1] of highlightedEntries.entries()) {
     for (const [i2, h2] of highlightedEntries.entries()) {
       if (i2 > i1) {
-        highlightedEdges = [...highlightedEdges, ...(adjTable[h1.uniqueName][h2.uniqueName] ?? [])]
+        highlightedEdges = [...highlightedEdges, ...(adjTable[h1][h2] ?? [])]
       }
     }
   }

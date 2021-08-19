@@ -1,7 +1,7 @@
 type Notes = Array<Note>
 
 interface AppState {
-  pressedKeys: { [key: number]: Note },
+  pressedKeys: { [key: number]: Array<string> },
   selectedNotes: Set<string>
 };
 

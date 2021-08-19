@@ -2,15 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import WebMidi from 'webmidi';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
-import { HarmonicMap, harmonicInfo, generateCorrections, noteToChannel, numMidiNotes } from './components/HarmonicMap';
+import { HarmonicMap, harmonicInfo, generateCorrections, noteToChannel, numMidiNotes, byField } from './components/HarmonicMap';
 import { Tuner } from './components/Tuner';
 
 const PITCH_RANGE = 48;
 
-function MidiToNotes(midiNotes: { [key: number]: Note }): Notes {
-  let notes: Notes = [];
+function MidiToNotes(midiNotes: { [key: number]: Array<string> }): Array<string> {
+  let notes: Array<string> = [];
   for (const note in midiNotes) {
-    notes.push(midiNotes[note]);
+    notes = [...notes, ...midiNotes[note]];
   }
   return notes;
 }
@@ -76,7 +76,8 @@ const App = () => {
     if (input) {
       input.addListener('noteon', "all",
         (e) => {
-          let pressedKeys = Object.assign(state.pressedKeys, { [e.note.number]: e.note.name as Note });
+          const uniqueNames = byField("midiNote")[e.note.number % 12];
+          let pressedKeys = Object.assign(state.pressedKeys, { [e.note.number]: [...uniqueNames] });
           setState({
             ...state,
             pressedKeys: pressedKeys
