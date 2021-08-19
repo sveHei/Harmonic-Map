@@ -70,7 +70,7 @@ for (let note of harmonicInfo) {
 const adj1: Array<Coord> = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const adjDiag: Array<Coord> = [[1, 1], [-1, -1]];
 // const adj2: Array<Coord> = [[1, -1], [-1, 1], [0, 2], [2, 0], [0, -2], [-2, 0]]; // Removed the non direct diagonals
-const adj2: Array<Coord> = [[0, 2], [2, 0], [0, -2], [-2, 0]];
+// const adj2: Array<Coord> = [[0, 2], [2, 0], [0, -2], [-2, 0]];
 
 
 type Adj = { [key: string]: [string] | [string, string] };
@@ -99,15 +99,15 @@ function generateAdjTable(): AdjTableType {
     const edgeId = getEdgeId(origin.coords, target.coords);
     noteAdj[target.uniqueName] = [edgeId];
   }
-  function addTwoEdges(origin: HarmonicEntry, target: HarmonicEntry, noteAdj: Adj) {
-    const [x1, y1] = origin.coords;
-    const [x3, y3] = target.coords;
-    const middleCoords: [number, number] = [(x3 - x1) / 2 + x1, (y3 - y1) / 2 + y1]
+  // function addTwoEdges(origin: HarmonicEntry, target: HarmonicEntry, noteAdj: Adj) {
+  //   const [x1, y1] = origin.coords;
+  //   const [x3, y3] = target.coords;
+  //   const middleCoords: [number, number] = [(x3 - x1) / 2 + x1, (y3 - y1) / 2 + y1]
 
-    const edgeId = getEdgeId(origin.coords, middleCoords);
-    const edgeId2 = getEdgeId(middleCoords, target.coords);
-    noteAdj[target.uniqueName] = [edgeId, edgeId2];
-  }
+  //   const edgeId = getEdgeId(origin.coords, middleCoords);
+  //   const edgeId2 = getEdgeId(middleCoords, target.coords);
+  //   noteAdj[target.uniqueName] = [edgeId, edgeId2];
+  // }
   function addAdjacent(adjacence: Array<Coord>, addEdges: (origin: HarmonicEntry, target: HarmonicEntry, noteAdj: Adj) => void, origin: HarmonicEntry, noteAdj: Adj) {
     for (const offset of adjacence) {
       const targetCoords = sumCoordinates(origin.coords, offset);
@@ -124,7 +124,7 @@ function generateAdjTable(): AdjTableType {
 
     addAdjacent(adj1, addOneEdge, origin, noteAdj);
     addAdjacent(adjDiag, addOneEdge, origin, noteAdj);
-    addAdjacent(adj2, addTwoEdges, origin, noteAdj);
+    // addAdjacent(adj2, addTwoEdges, origin, noteAdj);
     table[origin.uniqueName] = noteAdj;
   }
 

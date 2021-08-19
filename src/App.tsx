@@ -77,7 +77,7 @@ const App = () => {
       input.addListener('noteon', "all",
         (e) => {
           const uniqueNames = byField("midiNote")[e.note.number % 12];
-          let pressedKeys = Object.assign(state.pressedKeys, { [e.note.number]: [...uniqueNames] });
+          let pressedKeys = Object.assign(state.pressedKeys, { [e.note.number]: [...uniqueNames.map((e) => e.uniqueName)] });
           setState({
             ...state,
             pressedKeys: pressedKeys
