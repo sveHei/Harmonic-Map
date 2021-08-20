@@ -1,13 +1,5 @@
 type Notes = Array<Note>
 
-interface AppState {
-  pressedKeys: { [key: number]: Array<string> },
-  selectedNotes: Set<string>
-};
-
-interface InputState {
-  selected_input?: string,
-}
 
 type Note =
   "A" |

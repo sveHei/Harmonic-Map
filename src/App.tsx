@@ -28,16 +28,29 @@ function usePrevious<t>(value: t): t | undefined {
 // lifecycle, always from the same reference, on the WebMidi listeners
 let selectedOutput: string;
 
-const App = () => {
 
-  const [state, setState] = useState<AppState>({
-    pressedKeys: {},
+type PressedKeysState = { [key: number]: Array<string> };
+interface SelectedState {
+  selectedNotes: Set<string>
+};
+
+interface InputState {
+  selected_input?: string,
+}
+
+const App = () => {
+  const [pressedState, setPressedState] = useState<PressedKeysState>({});
+  const pressedRef = useRef(pressedState);
+  pressedRef.current = pressedState;
+
+  const [selectedState, setSelectedState] = useState<SelectedState>({
     selectedNotes: new Set(),
-  })
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  });
+  const selectedRef = useRef(selectedState);
+  selectedRef.current = selectedState;
+
   const [inputState, setInputState] = useState<InputState>({});
-  const previousSelectedNotes = usePrevious(state.selectedNotes);
+  const previousSelectedNotes = usePrevious(selectedState.selectedNotes);
 
   const [webMidiStatus, setWebMidiStatus] = useState<WebMidiStatus>("initializing")
 
@@ -79,21 +92,15 @@ const App = () => {
       input.addListener('noteon', "all",
         (e) => {
           const uniqueNames = byField("midiNote")[e.note.number % 12];
-          let pressedKeys = Object.assign(stateRef.current.pressedKeys, { [e.note.number]: [...uniqueNames.map((e) => e.uniqueName)] });
-          setState({
-            ...stateRef.current,
-            pressedKeys: pressedKeys
-          });
+          let pressedKeys = Object.assign(selectedRef.current, { [e.note.number]: [...uniqueNames.map((e) => e.uniqueName)] });
+          setPressedState(pressedKeys);
         }
       );
       input.addListener('noteoff', "all",
         (e) => {
-          const pressedKeys = Object.assign(stateRef.current.pressedKeys);
+          const pressedKeys = Object.assign(pressedRef.current);
           delete pressedKeys[e.note.number];
-          setState({
-            ...stateRef.current,
-            pressedKeys: pressedKeys
-          });
+          setPressedState(pressedKeys);
         }
       );
 
@@ -138,7 +145,7 @@ const App = () => {
     // Rely note to output
     let output = WebMidi.getOutputById(selectedOutput);
     if (output) {
-      let corrections = generateCorrections(stateRef.current.selectedNotes);
+      let corrections = generateCorrections(selectedRef.current.selectedNotes);
       for (const [midiNote, correction] of corrections.entries()) {
         output.sendPitchBend(((correction ?? 0) / 100) / PITCH_RANGE, noteToChannel(midiNote));
       }
@@ -147,8 +154,8 @@ const App = () => {
 
   const onClickNote = (note: string) => {
     console.log(note);
-    setState((state) => {
-      let set = new Set(stateRef.current.selectedNotes);
+    setSelectedState((state) => {
+      let set = new Set(selectedRef.current.selectedNotes);
       if (set.has(note)) {
         set.delete(note);
       } else {
@@ -162,9 +169,9 @@ const App = () => {
     })
   }
 
-  const pressedKeys = MidiToNotes(state.pressedKeys)
+  const pressedKeys = MidiToNotes(pressedState)
 
-  if (webMidiStatus === "initialized" && !_.isEqual(previousSelectedNotes, stateRef.current.selectedNotes)) {
+  if (webMidiStatus === "initialized" && !_.isEqual(previousSelectedNotes, selectedRef.current.selectedNotes)) {
     sendTuning();
   }
 
@@ -177,13 +184,13 @@ const App = () => {
         onSelectedInput={onSelectedInput}
         onSelectedOutput={onSelectedOutput}
         webMidiStatus={webMidiStatus}
-        selectedNotes={state.selectedNotes}
+        selectedNotes={selectedState.selectedNotes}
       />
       <HarmonicMap
         highlighted={pressedKeys}
         onClickNote={onClickNote}
-        selected={state.selectedNotes} />
-      <Tuner selected={state.selectedNotes} />
+        selected={selectedState.selectedNotes} />
+      <Tuner selected={selectedState.selectedNotes} />
     </div>
   )
 
