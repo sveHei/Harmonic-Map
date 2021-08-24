@@ -155,7 +155,7 @@ const App = () => {
   const onClickNote = (note: string) => {
     console.log(note);
     setSelectedState((state) => {
-      let set = new Set(selectedRef.current.selectedNotes);
+      let set = new Set(state.selectedNotes);
       if (set.has(note)) {
         set.delete(note);
       } else {
