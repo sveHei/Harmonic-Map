@@ -6,6 +6,7 @@ import { HarmonicMap } from './components/HarmonicMap';
 import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, getBaseNoteOffset } from "./harmonicInfo";
 import { TunningInfo } from './components/TunningInfo';
 import { Col, Container, Row } from 'react-bootstrap';
+import { Presets } from './components/Presets';
 
 const PITCH_RANGE = 48;
 
@@ -185,6 +186,10 @@ const App = () => {
     })
   }
 
+  const onSelectedPreset = (preset: string[]) => {
+    setSelectedState({ selectedNotes: new Set(preset) });
+  }
+
   const pressedKeys = MidiToNotes(pressedState)
 
   if (webMidiStatus === "initialized" && !_.isEqual(previousSelectedNotes, selectedRef.current.selectedNotes)) {
@@ -218,7 +223,13 @@ const App = () => {
                 <TunningInfo selected={selectedState.selectedNotes} base={baseState} />
               </div>
             </div>
-
+            <div className="card mt-3">
+              <div className="card-body">
+                <h4 className="card-title">Scales</h4>
+                <Presets selected={selectedState.selectedNotes}
+                  onSelectedPreset={onSelectedPreset} />
+              </div>
+            </div>
           </Col>
           <Col lg={6} xl={4}>
             <div className="d-flex justify-content-md-center">
