@@ -5,6 +5,7 @@ import { MidiPort } from './components/ControlBar';
 import { HarmonicMap } from './components/HarmonicMap';
 import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, getBaseNoteOffset } from "./harmonicInfo";
 import { Tuner } from './components/Tuner';
+import { Col, Container, Row } from 'react-bootstrap';
 
 const PITCH_RANGE = 48;
 
@@ -192,25 +193,47 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header">
+      {/* <header className="App-header">
         Harmonic Map
-      </header>
-      <div style={{ width: 350, "float": "left" }}>
-        <MidiPort
-          onSelectedInput={onSelectedInput}
-          onSelectedOutput={onSelectedOutput}
-          onSelectBaseNote={onSelectedBase}
-          webMidiStatus={webMidiStatus}
-          selectedNotes={selectedState.selectedNotes}
-        />
-        <Tuner selected={selectedState.selectedNotes} base={baseState} />
-      </div>
+      </header> */}
+      <Container fluid>
+        <Row className="justify-content-md-center"><Col ><h1 className="text-center">Harmonic Map</h1></Col></Row>
+        <Row className="justify-content-md-center">
+          <Col lg={4} style={{ maxWidth: "400px" }} className="pr-1">
+            <div className="card">
+              <div className="card-body">
+                <h4 className="card-title">Controls</h4>
+                <MidiPort
+                  onSelectedInput={onSelectedInput}
+                  onSelectedOutput={onSelectedOutput}
+                  onSelectBaseNote={onSelectedBase}
+                  webMidiStatus={webMidiStatus}
+                  selectedNotes={selectedState.selectedNotes}
+                />
+              </div>
+            </div>
+            <div className="card mt-3">
+              <div className="card-body">
+                <h4 className="card-title">Tuning info</h4>
+                <Tuner selected={selectedState.selectedNotes} base={baseState} />
+              </div>
+            </div>
 
-      <HarmonicMap
-        highlighted={pressedKeys}
-        onClickNote={onClickNote}
-        selected={selectedState.selectedNotes} />
-    </div>
+          </Col>
+          <Col lg={6} xl={4}>
+            <div className="d-flex justify-content-md-center">
+              <HarmonicMap
+                highlighted={pressedKeys}
+                onClickNote={onClickNote}
+                selected={selectedState.selectedNotes} />
+            </div>
+          </Col>
+
+        </Row>
+      </Container>
+
+
+    </div >
   )
 
 }

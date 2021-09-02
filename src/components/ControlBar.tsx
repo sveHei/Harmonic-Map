@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Col, Form, FormGroup, Row } from 'react-bootstrap';
 import WebMidi from 'webmidi';
 import { eqTmpNamePosition } from '../harmonicInfo';
 
@@ -51,27 +52,38 @@ export const MidiPort = ({ onSelectedInput, onSelectedOutput, onSelectBaseNote, 
 
     return (
       <div>
-        <h4>Input</h4>
-        <div>
-          <select onChange={onSelectedInput}>
-            <option id="inputs" key="inital_input">-- inputs --</option>
-            {/* {this.state.availableInputs} */}
-            {availableInputsArr}
-          </select>
-        </div>
-        <h4>Output</h4>
-        <div>
-          <select onChange={onSelectedOutput}>
-            <option id='outputs' key="initial_output">-- outputs --</option>
-            {availableOutputsArr}
-          </select>
-          <div>
-            <label htmlFor="selectNote">Choose a base note:</label>
-            <select onChange={onSelectBaseNote} name="selectNote">
-              {selectableNotes}
-            </select>
-          </div>
-        </div>
+        <Form>
+          <fieldset>
+            <legend>Input</legend>
+            <FormGroup className="mb-3">
+              <Form.Select aria-label="Select input" onChange={onSelectedInput}>
+                <option id="inputs" key="inital_input">-- inputs --</option>
+                {/* {this.state.availableInputs} */}
+                {availableInputsArr}
+              </Form.Select>
+            </FormGroup>
+          </fieldset>
+        </Form>
+        <Form>
+          <fieldset>
+            <legend>Output</legend>
+            <FormGroup className="mb-3">
+              <Form.Select aria-label="Select output" onChange={onSelectedOutput}>
+                <option id='outputs' key="initial_output">-- outputs --</option>
+                {availableOutputsArr}
+              </Form.Select>
+            </FormGroup>
+            <FormGroup as={Row}>
+              <Form.Label column lg={4} htmlFor="selectNote">do note:</Form.Label>
+              <Col>
+                <Form.Select name="selectNote" aria-label="Select output" onChange={onSelectBaseNote}>
+                  {selectableNotes}
+                </Form.Select>
+              </Col>
+            </FormGroup>
+          </fieldset>
+        </Form>
+
       </div>
     );
   }

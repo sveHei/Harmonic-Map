@@ -16,10 +16,8 @@ export const Tuner = ({ selected, base }: TunerProps) => {
         return <li key={names}> {names} : {"12TET" + tuning} </li>
     });
 
-    console.log(selected);
     return <div>
-        <h3>Tuning info</h3>
-        Base: {base}
+        <p>Base: {base}</p>
         <ul>
             {tuningInfo}
         </ul>
