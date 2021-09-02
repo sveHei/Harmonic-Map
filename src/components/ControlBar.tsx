@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import WebMidi from 'webmidi';
-import { byField, byUniqueName, generateCorrections } from './HarmonicMap';
+import { byField, byUniqueName, generateCorrections } from '../harmonicInfo';
 
 
 export const MidiPort = ({ onSelectedInput, onSelectedOutput, webMidiStatus, selectedNotes }: PortProps) => {

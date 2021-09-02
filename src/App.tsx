@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import WebMidi from 'webmidi';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
-import { HarmonicMap, harmonicInfo, generateCorrections, noteToChannel, numMidiNotes, byField } from './components/HarmonicMap';
+import { HarmonicMap } from './components/HarmonicMap';
+import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel } from "./harmonicInfo";
 import { Tuner } from './components/Tuner';
 
 const PITCH_RANGE = 48;
@@ -91,16 +92,19 @@ const App = () => {
     if (input) {
       input.addListener('noteon', "all",
         (e) => {
-          const uniqueNames = byField("midiNote")[e.note.number % 12];
-          let pressedKeys = Object.assign(selectedRef.current, { [e.note.number]: [...uniqueNames.map((e) => e.uniqueName)] });
-          setPressedState(pressedKeys);
+          setPressedState((pressedKeys) => {
+            const uniqueNames = byField("midiNote")[e.note.number % 12];
+            return { ...pressedKeys, ...{ [e.note.number]: [...uniqueNames.map((e) => e.uniqueName)] } };
+          });
         }
       );
       input.addListener('noteoff', "all",
         (e) => {
-          const pressedKeys = Object.assign(pressedRef.current);
-          delete pressedKeys[e.note.number];
-          setPressedState(pressedKeys);
+          setPressedState((state) => {
+            const pressedKeys = { ...pressedRef.current };
+            delete pressedKeys[e.note.number];
+            return pressedKeys;
+          });
         }
       );
 
