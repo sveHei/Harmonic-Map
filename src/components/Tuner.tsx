@@ -1,7 +1,7 @@
 import { byField, generateCorrections } from "../harmonicInfo";
 
-type TunerProps = { selected: Set<string> };
-export const Tuner = ({ selected }: TunerProps) => {
+type TunerProps = { selected: Set<string>, base: Note };
+export const Tuner = ({ selected, base }: TunerProps) => {
     let byMidiNote = byField("midiNote");
 
     const tuningInfo = generateCorrections(selected).map((correction, midiNote) => {
@@ -19,6 +19,7 @@ export const Tuner = ({ selected }: TunerProps) => {
     console.log(selected);
     return <div>
         <h3>Tuning info</h3>
+        Base: {base}
         <ul>
             {tuningInfo}
         </ul>

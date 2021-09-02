@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import WebMidi from 'webmidi';
+import { eqTmpNamePosition } from '../harmonicInfo';
 
 
-export const MidiPort = ({ onSelectedInput, onSelectedOutput, webMidiStatus, selectedNotes }: PortProps) => {
+export const MidiPort = ({ onSelectedInput, onSelectedOutput, onSelectBaseNote, webMidiStatus, selectedNotes }: PortProps) => {
   const webMidiInitialized = webMidiStatus === "initialized";
   const [availableInputs, setAvailableInputs] = useState<Array<PortDefinition>>([])
   const [availableOutputs, setAvailableOutputs] = useState<Array<PortDefinition>>([])
@@ -46,23 +47,30 @@ export const MidiPort = ({ onSelectedInput, onSelectedOutput, webMidiStatus, sel
       availableOutputsArr.push(<option key={output.id} value={output.id}>{output.name}</option>)
     }
 
+    const selectableNotes = eqTmpNamePosition.map((note) => <option key={note} value={note}>{note}</option>)
+
     return (
       <div>
-        <select onChange={onSelectedInput}>
-          <option id="inputs" key="inital_input">-- inputs --</option>
-          {/* {this.state.availableInputs} */}
-          {availableInputsArr}
-        </select>
-        <select onChange={onSelectedOutput}>
-          <option id='outputs' key="initial_output">-- outputs --</option>
-          {availableOutputsArr}
-          {/* {this.state.availableOutputs} */}
-        </select>
+        <h4>Input</h4>
         <div>
-          {/* <h3>Tuning info</h3>
-          <ul>
-            {tuningInfo}
-          </ul> */}
+          <select onChange={onSelectedInput}>
+            <option id="inputs" key="inital_input">-- inputs --</option>
+            {/* {this.state.availableInputs} */}
+            {availableInputsArr}
+          </select>
+        </div>
+        <h4>Output</h4>
+        <div>
+          <select onChange={onSelectedOutput}>
+            <option id='outputs' key="initial_output">-- outputs --</option>
+            {availableOutputsArr}
+          </select>
+          <div>
+            <label htmlFor="selectNote">Choose a base note:</label>
+            <select onChange={onSelectBaseNote} name="selectNote">
+              {selectableNotes}
+            </select>
+          </div>
         </div>
       </div>
     );

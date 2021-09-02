@@ -3,7 +3,7 @@ import WebMidi from 'webmidi';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
 import { HarmonicMap } from './components/HarmonicMap';
-import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel } from "./harmonicInfo";
+import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, getBaseNoteOffset } from "./harmonicInfo";
 import { Tuner } from './components/Tuner';
 
 const PITCH_RANGE = 48;
@@ -31,6 +31,7 @@ let selectedOutput: string;
 
 
 type PressedKeysState = { [key: number]: Array<string> };
+type BaseState = Note;
 interface SelectedState {
   selectedNotes: Set<string>
 };
@@ -52,6 +53,10 @@ const App = () => {
 
   const [inputState, setInputState] = useState<InputState>({});
   const previousSelectedNotes = usePrevious(selectedState.selectedNotes);
+
+  const [baseState, setBaseState] = useState<BaseState>(eqTmpNamePosition[0]);
+  const baseRef = useRef(baseState);
+  baseRef.current = baseState;
 
   const [webMidiStatus, setWebMidiStatus] = useState<WebMidiStatus>("initializing")
 
@@ -112,14 +117,16 @@ const App = () => {
         let output = WebMidi.getOutputById(selectedOutput);
         if (output) {
           sendTuning();
-          output.playNote(event.note.number, noteToChannel(event.note.number), { velocity: event.velocity });
+          const playNote = event.note.number + getBaseNoteOffset(baseRef.current);
+          output.playNote(playNote, noteToChannel(event.note.number), { velocity: event.velocity });
         }
       });
 
       input.addListener('noteoff', 'all', (event) => {
         let output = WebMidi.getOutputById(selectedOutput);
         if (output) {
-          output.stopNote(event.note.number, noteToChannel(event.note.number));
+          const stopNote = event.note.number + getBaseNoteOffset(baseRef.current);
+          output.stopNote(stopNote, noteToChannel(event.note.number));
         }
       });
     }
@@ -133,6 +140,10 @@ const App = () => {
     selectedOutput = e.target.value;
     sendPitchBendRange();
     sendTuning();
+  }
+
+  const onSelectedBase = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    setBaseState(e.target.value as Note);
   }
 
   const sendPitchBendRange = () => {
@@ -188,10 +199,11 @@ const App = () => {
         <MidiPort
           onSelectedInput={onSelectedInput}
           onSelectedOutput={onSelectedOutput}
+          onSelectBaseNote={onSelectedBase}
           webMidiStatus={webMidiStatus}
           selectedNotes={selectedState.selectedNotes}
         />
-        <Tuner selected={selectedState.selectedNotes} />
+        <Tuner selected={selectedState.selectedNotes} base={baseState} />
       </div>
 
       <HarmonicMap

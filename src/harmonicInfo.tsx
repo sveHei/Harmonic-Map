@@ -46,7 +46,7 @@ export const harmonicInfo: HarmonicInfo = [
     { uniqueName: "ri2", eqTmpName: "D#", svgId: "note_3_3", midiNote: 63 % 12, coords: [3, 3], pitchCorrection: 23 },
 ];
 
-export const eqTmpNamePosition = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+export const eqTmpNamePosition: Note[] = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 type groupBy = { [key: string]: Array<HarmonicEntry> }
 
@@ -145,3 +145,7 @@ function generateAdjTable(): AdjTableType {
 }
 
 export const adjTable = generateAdjTable();
+
+export function getBaseNoteOffset(baseNote: Note) {
+    return eqTmpNamePosition.indexOf(baseNote);
+}
