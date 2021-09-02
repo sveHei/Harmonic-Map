@@ -184,17 +184,20 @@ const App = () => {
       <header className="App-header">
         Harmonic Map
       </header>
-      <MidiPort
-        onSelectedInput={onSelectedInput}
-        onSelectedOutput={onSelectedOutput}
-        webMidiStatus={webMidiStatus}
-        selectedNotes={selectedState.selectedNotes}
-      />
+      <div style={{ width: 350, "float": "left" }}>
+        <MidiPort
+          onSelectedInput={onSelectedInput}
+          onSelectedOutput={onSelectedOutput}
+          webMidiStatus={webMidiStatus}
+          selectedNotes={selectedState.selectedNotes}
+        />
+        <Tuner selected={selectedState.selectedNotes} />
+      </div>
+
       <HarmonicMap
         highlighted={pressedKeys}
         onClickNote={onClickNote}
         selected={selectedState.selectedNotes} />
-      <Tuner selected={selectedState.selectedNotes} />
     </div>
   )
 

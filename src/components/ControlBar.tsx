@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import WebMidi from 'webmidi';
-import { byField, byUniqueName, generateCorrections } from '../harmonicInfo';
 
 
 export const MidiPort = ({ onSelectedInput, onSelectedOutput, webMidiStatus, selectedNotes }: PortProps) => {
@@ -47,27 +46,8 @@ export const MidiPort = ({ onSelectedInput, onSelectedOutput, webMidiStatus, sel
       availableOutputsArr.push(<option key={output.id} value={output.id}>{output.name}</option>)
     }
 
-    let correctedTuning: { [key: string]: number } = {};
-    for (let selected of selectedNotes) {
-      let info = byUniqueName[selected];
-      correctedTuning[info.eqTmpName] = info.pitchCorrection;
-    }
-    let byMidiNote = byField("midiNote");
-
-    const tuningInfo = generateCorrections(selectedNotes).map((correction, midiNote) => {
-      function removeDuplicates(l: Array<any>) {
-        return Array.from(new Set(l));
-      }
-      function showWithSign(num: number) {
-        return (num < 0 ? " " : " +") + num
-      }
-      let tuning = correction !== null ? showWithSign(correction) + " cents" : "";
-      const names = removeDuplicates(byMidiNote[midiNote].map((el) => el.eqTmpName)).join("/");
-      return <li key={names}> {names} : {"12TET" + tuning} </li>
-    });
-
     return (
-      <div style={{ width: 350, "float": "left" }}>
+      <div>
         <select onChange={onSelectedInput}>
           <option id="inputs" key="inital_input">-- inputs --</option>
           {/* {this.state.availableInputs} */}
@@ -79,10 +59,10 @@ export const MidiPort = ({ onSelectedInput, onSelectedOutput, webMidiStatus, sel
           {/* {this.state.availableOutputs} */}
         </select>
         <div>
-          <h3>Tuning info</h3>
+          {/* <h3>Tuning info</h3>
           <ul>
             {tuningInfo}
-          </ul>
+          </ul> */}
         </div>
       </div>
     );
