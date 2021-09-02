@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
 import { HarmonicMap } from './components/HarmonicMap';
 import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, getBaseNoteOffset } from "./harmonicInfo";
-import { Tuner } from './components/Tuner';
+import { TunningInfo } from './components/TunningInfo';
 import { Col, Container, Row } from 'react-bootstrap';
 
 const PITCH_RANGE = 48;
@@ -215,7 +215,7 @@ const App = () => {
             <div className="card mt-3">
               <div className="card-body">
                 <h4 className="card-title">Tuning info</h4>
-                <Tuner selected={selectedState.selectedNotes} base={baseState} />
+                <TunningInfo selected={selectedState.selectedNotes} base={baseState} />
               </div>
             </div>
 
