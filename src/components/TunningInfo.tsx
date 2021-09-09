@@ -1,3 +1,4 @@
+import { InfoCircle } from "react-bootstrap-icons";
 import { byField, generateCorrections } from "../harmonicInfo";
 
 type TunerProps = { selected: Set<string>, base: Note };
@@ -21,6 +22,7 @@ export const TunningInfo = ({ selected, base }: TunerProps) => {
         <ul>
             {tuningInfo}
         </ul>
+        <p><InfoCircle /> The lowest midi note is denoted by a circle</p>
     </div>;
 
 }

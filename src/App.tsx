@@ -3,20 +3,12 @@ import WebMidi from 'webmidi';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
 import { HarmonicMap } from './components/HarmonicMap';
-import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, getBaseNoteOffset } from "./harmonicInfo";
+import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, getBaseNoteOffset, PlayingNotes } from "./harmonicInfo";
 import { TunningInfo } from './components/TunningInfo';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Presets } from './components/Presets';
 
 const PITCH_RANGE = 48;
-
-function MidiToNotes(midiNotes: { [key: number]: Array<string> }): Array<string> {
-  let notes: Array<string> = [];
-  for (const note in midiNotes) {
-    notes = [...notes, ...midiNotes[note]];
-  }
-  return notes;
-}
 
 function usePrevious<t>(value: t): t | undefined {
   const ref = useRef<t>();
@@ -32,7 +24,7 @@ function usePrevious<t>(value: t): t | undefined {
 let selectedOutput: string;
 
 
-type PressedKeysState = { [key: number]: Array<string> };
+type PressedKeysState = PlayingNotes;
 type BaseState = Note;
 interface SelectedState {
   selectedNotes: Set<string>
@@ -190,8 +182,6 @@ const App = () => {
     setSelectedState({ selectedNotes: new Set(preset) });
   }
 
-  const pressedKeys = MidiToNotes(pressedState)
-
   if (webMidiStatus === "initialized" && !_.isEqual(previousSelectedNotes, selectedRef.current.selectedNotes)) {
     sendTuning();
   }
@@ -234,7 +224,7 @@ const App = () => {
           <Col lg={6} xl={4}>
             <div className="d-flex justify-content-md-center">
               <HarmonicMap
-                highlighted={pressedKeys}
+                playingNotes={pressedState}
                 onClickNote={onClickNote}
                 selected={selectedState.selectedNotes} />
             </div>

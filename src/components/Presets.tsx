@@ -22,7 +22,7 @@ export const Presets = ({ selected, onSelectedPreset }: PresetsProps) => {
         }
         const active = _.isEqual(new Set(p.list), selected);
         const variant = active ? "secondary" : "outline-secondary";
-        return <Button variant={variant} onClick={onClick}>{p.name}</Button>
+        return <Button key={p.name} variant={variant} onClick={onClick}>{p.name}</Button>
     })
     return <div>
         {buttons}

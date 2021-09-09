@@ -1,6 +1,7 @@
+import _ from "lodash";
 
 export type Coord = [number, number];
-
+export type PlayingNotes = { [key: number]: Array<string> };
 export type HarmonicEntry = {
     eqTmpName: Note;
     uniqueName: string; // TODO: Change to specific type
@@ -50,12 +51,14 @@ export const eqTmpNamePosition: Note[] = ["C", "C#", "D", "D#", "E", "F", "F#", 
 
 type groupBy = { [key: string]: Array<HarmonicEntry> }
 
-export function byField(field: keyof Omit<HarmonicEntry, "coords">): groupBy {
+export function byFieldInner(field: keyof Omit<HarmonicEntry, "coords">): groupBy {
     return harmonicInfo.reduce<groupBy>((groups, item) => ({
         ...groups,
         [item[field]]: [...(groups[item[field]] || []), item]
     }), {});
 }
+
+export const byField = _.memoize(byFieldInner);
 
 export let allEqTmpNames = new Set(harmonicInfo.map((el) => el.eqTmpName));
 

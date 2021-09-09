@@ -1,0 +1,10 @@
+// Generated with https://svg2jsx.com/
+// Removed fillOpacity="1"
+// Changed v_, h_ and d_ to e_ for edge
+// Some horizontal_ ids changed to e_
+// Changed e_0_-1:0_0-7 to e_-1_-1:0_-1
+// Changed the so_do edge from e_-1_0:0_0 to e_0_-1:0_0
+
+// For with circles:
+// Generated with https://svg2jsx.com/
+// Removed fillOpacity="1"

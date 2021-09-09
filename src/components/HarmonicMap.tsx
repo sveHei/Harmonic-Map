@@ -1,20 +1,24 @@
 import React, { MouseEvent } from 'react'
-import HarmonicMapOpt2 from '../icons/Harmonic_map_complete_simple'; // Generated with https://svg2jsx.com/
-import { harmonicInfo, adjTable } from '../harmonicInfo';
+import HarmonicMapSvg from '../icons/HarmonicMap'; // Generated with https://svg2jsx.com/
+import { harmonicInfo, adjTable, PlayingNotes, byField, numMidiNotes } from '../harmonicInfo';
 
 type HarmonicMapProps = {
-  highlighted: Array<string>,
+  playingNotes: PlayingNotes,
   onClickNote: (ev: string) => void,
   selected: Set<string>,
 }
 
-export const HarmonicMap = ({ highlighted, onClickNote, selected }: HarmonicMapProps) => {
+export const HarmonicMap = ({ playingNotes, onClickNote, selected }: HarmonicMapProps) => {
   let highlightedStyle = "fill-opacity: 0.3;";
   let edgeHighlightedStyle = "stroke-width: 0.8;";
   let selectedStyle = "text-transform: uppercase;";
+  let transparentCirclesStyle = "opacity: 0";
+
+  const highlighted = MidiToNotes(playingNotes)
 
   // Choose svg ids to hide
   let transparentIds = generateTransparentIds(highlighted);
+  let transparentCircles = generateTransparentCircles(playingNotes);
 
   // Generate the ids for the selected notes
   let selectedIds = generateSelectedIds(selected);
@@ -29,6 +33,9 @@ export const HarmonicMap = ({ highlighted, onClickNote, selected }: HarmonicMapP
         {transparentIds.join(", ")} {"{"} {
           highlightedStyle
         } {"}"}
+        {transparentCircles.join(", ")} {"{"} {
+          transparentCirclesStyle
+        } {"}"}
         {highlightedEdges.join(", ")} {"{"} {
           edgeHighlightedStyle
         } {"}"}
@@ -36,7 +43,7 @@ export const HarmonicMap = ({ highlighted, onClickNote, selected }: HarmonicMapP
           selectedStyle
         } {"}"}
       </style>
-      <HarmonicMapOpt2 />
+      <HarmonicMapSvg />
     </div>
 
   )
@@ -83,6 +90,32 @@ function generateTransparentIds(highlighted: string[]) {
   return transparentIds;
 }
 
+function generateTransparentCircles(playingNotes: PlayingNotes) {
+
+  function range(size: number, startAt: number = 0): ReadonlyArray<number> {
+    return [...Array(size).keys()].map(i => i + startAt);
+  }
+
+  let svgIds: Set<string>;
+  if (Object.keys(playingNotes).length > 0) {
+    const baseNote = Math.min(...Object.keys(playingNotes).map(i => Number(i)));
+    const byMidiNote = byField("midiNote");
+    svgIds = new Set(byMidiNote[baseNote % numMidiNotes].map(e => e.svgId));
+  } else {
+    svgIds = new Set();
+  }
+
+  let transparentCircles = [];
+  for (const i of range(8, -3)) {
+    for (const j of range(8, -3)) {
+      if (!svgIds.has(`note_${i}_${j}`)) {
+        transparentCircles.push(`#c_${i}_${j}`);
+      }
+    }
+  }
+  return transparentCircles;
+}
+
 function generateSelectedIds(selected: Set<string>) {
   let selectedIds = [];
   for (const note of harmonicInfo) {
@@ -92,3 +125,13 @@ function generateSelectedIds(selected: Set<string>) {
   }
   return selectedIds;
 }
+
+
+function MidiToNotes(midiNotes: PlayingNotes): Array<string> {
+  let notes: Array<string> = [];
+  for (const note in midiNotes) {
+    notes = [...notes, ...midiNotes[note]];
+  }
+  return notes;
+}
+
