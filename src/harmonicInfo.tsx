@@ -39,12 +39,12 @@ export const harmonicInfo: HarmonicInfo = [
     { uniqueName: "sa2", eqTmpName: "Gb", svgId: "note_-1_2", midiNote: 66 % 12, coords: [-1, 2], pitchCorrection: 17 },
     { uniqueName: "ta2", eqTmpName: "Bb", svgId: "note_0_2", midiNote: 70 % 12, coords: [0, 2], pitchCorrection: 3 },
     { uniqueName: "re2", eqTmpName: "D", svgId: "note_1_2", midiNote: 62 % 12, coords: [1, 2], pitchCorrection: -11 },
-    { uniqueName: "fi2", eqTmpName: "F#", svgId: "note_2_2", midiNote: 66 % 12, coords: [2, 2], pitchCorrection: -23 },
-    { uniqueName: "li2", eqTmpName: "A#", svgId: "note_3_2", midiNote: 70 % 12, coords: [3, 2], pitchCorrection: 21 },
+    { uniqueName: "fi2", eqTmpName: "F#", svgId: "note_2_2", midiNote: 66 % 12, coords: [2, 2], pitchCorrection: -25 },
+    { uniqueName: "li2", eqTmpName: "A#", svgId: "note_3_2", midiNote: 70 % 12, coords: [3, 2], pitchCorrection: -39 },
     { uniqueName: "ma2", eqTmpName: "Eb", svgId: "note_0_3", midiNote: 63 % 12, coords: [0, 3], pitchCorrection: 1 },
     { uniqueName: "so2", eqTmpName: "G", svgId: "note_1_3", midiNote: 67 % 12, coords: [1, 3], pitchCorrection: -13 },
     { uniqueName: "ti2", eqTmpName: "B", svgId: "note_2_3", midiNote: 71 % 12, coords: [2, 3], pitchCorrection: -27 },
-    { uniqueName: "ri2", eqTmpName: "D#", svgId: "note_3_3", midiNote: 63 % 12, coords: [3, 3], pitchCorrection: 23 },
+    { uniqueName: "ri2", eqTmpName: "D#", svgId: "note_3_3", midiNote: 63 % 12, coords: [3, 3], pitchCorrection: -41 },
 ];
 
 export const eqTmpNamePosition: Note[] = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
