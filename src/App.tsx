@@ -3,7 +3,7 @@ import WebMidi from 'webmidi';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
 import { HarmonicMap } from './components/HarmonicMap';
-import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, PlayingNotes } from "./harmonicInfo";
+import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, PlayingNotes, getMajorTonicNoteOffset } from "./harmonicInfo";
 import { TunningInfo } from './components/TunningInfo';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Presets } from './components/Presets';
@@ -25,7 +25,7 @@ let selectedOutput: string;
 
 
 type PressedKeysState = PlayingNotes;
-type BaseState = Note;
+type MajorTonicState = Note;
 interface SelectedState {
   selectedNotes: Set<string>
 };
@@ -48,9 +48,9 @@ const App = () => {
   const [inputState, setInputState] = useState<InputState>({});
   const previousSelectedNotes = usePrevious(selectedState.selectedNotes);
 
-  const [baseState, setBaseState] = useState<BaseState>(eqTmpNamePosition[0]);
-  const baseRef = useRef(baseState);
-  baseRef.current = baseState;
+  const [majorTonicState, setMajorTonicState] = useState<MajorTonicState>(eqTmpNamePosition[0]);
+  const majorTonicRef = useRef(majorTonicState);
+  majorTonicRef.current = majorTonicState;
 
   const [webMidiStatus, setWebMidiStatus] = useState<WebMidiStatus>("initializing")
 
@@ -92,7 +92,8 @@ const App = () => {
       input.addListener('noteon', "all",
         (e) => {
           setPressedState((pressedKeys) => {
-            const uniqueNames = byField("midiNote")[e.note.number % 12];
+            const offset = getMajorTonicNoteOffset(majorTonicRef.current);
+            const uniqueNames = byField("midiNote")[(e.note.number - offset) % 12];
             return { ...pressedKeys, ...{ [e.note.number]: [...uniqueNames.map((e) => e.uniqueName)] } };
           });
         }
@@ -136,8 +137,8 @@ const App = () => {
     sendTuning();
   }
 
-  const onSelectedBase = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setBaseState(e.target.value as Note);
+  const onSelectedMajorTonic = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    setMajorTonicState(e.target.value as Note);
   }
 
   const sendPitchBendRange = () => {
@@ -154,7 +155,7 @@ const App = () => {
     // Rely note to output
     let output = WebMidi.getOutputById(selectedOutput);
     if (output) {
-      let corrections = generateCorrections(selectedRef.current.selectedNotes, baseRef.current);
+      let corrections = generateCorrections(selectedRef.current.selectedNotes, majorTonicRef.current);
       for (const [midiNote, correction] of corrections.entries()) {
         output.sendPitchBend(((correction ?? 0) / 100) / PITCH_RANGE, noteToChannel(midiNote));
       }
@@ -201,7 +202,7 @@ const App = () => {
                 <MidiPort
                   onSelectedInput={onSelectedInput}
                   onSelectedOutput={onSelectedOutput}
-                  onSelectBaseNote={onSelectedBase}
+                  onSelectMajorTonicNote={onSelectedMajorTonic}
                   webMidiStatus={webMidiStatus}
                   selectedNotes={selectedState.selectedNotes}
                 />
@@ -210,7 +211,7 @@ const App = () => {
             <div className="card mt-3">
               <div className="card-body">
                 <h4 className="card-title">Tuning info</h4>
-                <TunningInfo selected={selectedState.selectedNotes} base={baseState} />
+                <TunningInfo selected={selectedState.selectedNotes} majorTonic={majorTonicState} />
               </div>
             </div>
             <div className="card mt-3">

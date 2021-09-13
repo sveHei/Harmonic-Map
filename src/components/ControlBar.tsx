@@ -4,7 +4,7 @@ import WebMidi from 'webmidi';
 import { eqTmpNamePosition } from '../harmonicInfo';
 
 
-export const MidiPort = ({ onSelectedInput, onSelectedOutput, onSelectBaseNote, webMidiStatus, selectedNotes }: PortProps) => {
+export const MidiPort = ({ onSelectedInput, onSelectedOutput, onSelectMajorTonicNote, webMidiStatus, selectedNotes }: PortProps) => {
   const webMidiInitialized = webMidiStatus === "initialized";
   const [availableInputs, setAvailableInputs] = useState<Array<PortDefinition>>([])
   const [availableOutputs, setAvailableOutputs] = useState<Array<PortDefinition>>([])
@@ -76,7 +76,7 @@ export const MidiPort = ({ onSelectedInput, onSelectedOutput, onSelectBaseNote, 
             <FormGroup as={Row}>
               <Form.Label column lg={5} htmlFor="selectNote">Major tonic (do):</Form.Label>
               <Col>
-                <Form.Select name="selectNote" aria-label="Select output" onChange={onSelectBaseNote}>
+                <Form.Select name="selectNote" aria-label="Select output" onChange={onSelectMajorTonicNote}>
                   {selectableNotes}
                 </Form.Select>
               </Col>

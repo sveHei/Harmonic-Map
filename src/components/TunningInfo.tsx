@@ -1,11 +1,11 @@
 import { InfoCircle } from "react-bootstrap-icons";
 import { byField, generateCorrections } from "../harmonicInfo";
 
-type TunerProps = { selected: Set<string>, base: Note };
-export const TunningInfo = ({ selected, base }: TunerProps) => {
+type TunerProps = { selected: Set<string>, majorTonic: Note };
+export const TunningInfo = ({ selected, majorTonic }: TunerProps) => {
     let byMidiNote = byField("midiNote");
 
-    const tuningInfo = generateCorrections(selected, base).map((correction, midiNote) => {
+    const tuningInfo = generateCorrections(selected, majorTonic).map((correction, midiNote) => {
         function removeDuplicates(l: Array<any>) {
             return Array.from(new Set(l));
         }

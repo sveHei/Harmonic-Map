@@ -26,7 +26,7 @@ type WebMidiStatus = "initializing" | "initialized" | "error";
 type PortProps = {
   onSelectedInput: (a: React.ChangeEvent<HTMLSelectElement>) => void;
   onSelectedOutput: (a: React.ChangeEvent<HTMLSelectElement>) => void;
-  onSelectBaseNote: (a: React.ChangeEvent<HTMLSelectElement>) => void;
+  onSelectMajorTonicNote: (a: React.ChangeEvent<HTMLSelectElement>) => void;
   webMidiStatus: WebMidiStatus;
   selectedNotes: List<string>;
 };

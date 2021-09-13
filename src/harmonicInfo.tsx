@@ -82,12 +82,12 @@ export function noteToChannel(midiNote: number): number {
     return naturalChannel >= 10 ? naturalChannel + 2 : naturalChannel;
 }
 
-export function generateCorrections(selectedNotes: Set<string>, baseNote: Note) {
-    const offset = getBaseNoteOffset(baseNote);
+export function generateCorrections(selectedNotes: Set<string>, majorTonicNote: Note) {
+
     let corrections = new Array(numMidiNotes).fill(null); // Assume no correction
     for (let noteId of selectedNotes) {
         let note = byUniqueName[noteId];
-        corrections[(note.midiNote + offset) % numMidiNotes] = note.pitchCorrection;
+        corrections[(note.midiNote) % numMidiNotes] = note.pitchCorrection;
     }
     return corrections;
 }
@@ -150,6 +150,6 @@ function generateAdjTable(): AdjTableType {
 
 export const adjTable = generateAdjTable();
 
-export function getBaseNoteOffset(baseNote: Note) {
-    return eqTmpNamePosition.indexOf(baseNote);
+export function getMajorTonicNoteOffset(majorTonicNote: Note) {
+    return eqTmpNamePosition.indexOf(majorTonicNote);
 }
