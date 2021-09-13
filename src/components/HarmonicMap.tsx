@@ -1,14 +1,15 @@
 import React, { MouseEvent } from 'react'
 import HarmonicMapSvg from '../icons/HarmonicMap'; // Generated with https://svg2jsx.com/
-import { harmonicInfo, adjTable, PlayingNotes, byField, numMidiNotes } from '../harmonicInfo';
+import { harmonicInfo, adjTable, PlayingNotes, byField, numMidiNotes, getMajorTonicNoteOffset } from '../harmonicInfo';
 
 type HarmonicMapProps = {
   playingNotes: PlayingNotes,
   onClickNote: (ev: string) => void,
   selected: Set<string>,
+  majorTonic: Note
 }
 
-export const HarmonicMap = ({ playingNotes, onClickNote, selected }: HarmonicMapProps) => {
+export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic }: HarmonicMapProps) => {
   let highlightedStyle = "fill-opacity: 0.3;";
   let edgeHighlightedStyle = "stroke-width: 0.8;";
   let selectedStyle = "text-transform: uppercase;";
@@ -18,7 +19,7 @@ export const HarmonicMap = ({ playingNotes, onClickNote, selected }: HarmonicMap
 
   // Choose svg ids to hide
   let transparentIds = generateTransparentIds(highlighted);
-  let transparentCircles = generateTransparentCircles(playingNotes);
+  let transparentCircles = generateTransparentCircles(playingNotes, majorTonic);
 
   // Generate the ids for the selected notes
   let selectedIds = generateSelectedIds(selected);
@@ -90,7 +91,8 @@ function generateTransparentIds(highlighted: string[]) {
   return transparentIds;
 }
 
-function generateTransparentCircles(playingNotes: PlayingNotes) {
+function generateTransparentCircles(playingNotes: PlayingNotes, majorTonic: Note) {
+  const offset = getMajorTonicNoteOffset(majorTonic);
 
   function range(size: number, startAt: number = 0): ReadonlyArray<number> {
     return [...Array(size).keys()].map(i => i + startAt);
@@ -98,9 +100,9 @@ function generateTransparentCircles(playingNotes: PlayingNotes) {
 
   let svgIds: Set<string>;
   if (Object.keys(playingNotes).length > 0) {
-    const baseNote = Math.min(...Object.keys(playingNotes).map(i => Number(i)));
+    const baseNote = Math.min(...Object.keys(playingNotes).map(i => Number(i) - offset));
     const byMidiNote = byField("midiNote");
-    svgIds = new Set(byMidiNote[baseNote % numMidiNotes].map(e => e.svgId));
+    svgIds = new Set(byMidiNote[(baseNote + numMidiNotes) % numMidiNotes].map(e => e.svgId));
   } else {
     svgIds = new Set();
   }

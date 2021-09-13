@@ -93,7 +93,8 @@ const App = () => {
         (e) => {
           setPressedState((pressedKeys) => {
             const offset = getMajorTonicNoteOffset(majorTonicRef.current);
-            const uniqueNames = byField("midiNote")[(e.note.number - offset) % 12];
+            // Module of negative number is negative
+            const uniqueNames = byField("midiNote")[(e.note.number - offset + numMidiNotes) % numMidiNotes];
             return { ...pressedKeys, ...{ [e.note.number]: [...uniqueNames.map((e) => e.uniqueName)] } };
           });
         }
@@ -156,6 +157,7 @@ const App = () => {
     let output = WebMidi.getOutputById(selectedOutput);
     if (output) {
       let corrections = generateCorrections(selectedRef.current.selectedNotes, majorTonicRef.current);
+      console.log(corrections);
       for (const [midiNote, correction] of corrections.entries()) {
         output.sendPitchBend(((correction ?? 0) / 100) / PITCH_RANGE, noteToChannel(midiNote));
       }
@@ -227,7 +229,8 @@ const App = () => {
               <HarmonicMap
                 playingNotes={pressedState}
                 onClickNote={onClickNote}
-                selected={selectedState.selectedNotes} />
+                selected={selectedState.selectedNotes}
+                majorTonic={majorTonicState} />
             </div>
           </Col>
 
