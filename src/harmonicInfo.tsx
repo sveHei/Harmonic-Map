@@ -77,7 +77,7 @@ export function sumCoordinates([x1, y1]: Coord, [x2, y2]: Coord): Coord {
 
 
 export function noteToChannel(midiNote: number): number {
-    let naturalChannel = midiNote % 12 + 1;
+    let naturalChannel = midiNote % 12 + 2;
     // Channels 10 and 11 are reserved for percussion
     return naturalChannel >= 10 ? naturalChannel + 2 : naturalChannel;
 }
