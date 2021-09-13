@@ -13,7 +13,7 @@ export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic }:
   let highlightedStyle = "fill-opacity: 0.3;";
   let edgeHighlightedStyle = "stroke-width: 0.8;";
   let selectedStyle = "text-transform: uppercase;";
-  let transparentCirclesStyle = "opacity: 0";
+  let transparentCirclesStyle = "display: none";
 
   const highlighted = MidiToNotes(playingNotes)
 
