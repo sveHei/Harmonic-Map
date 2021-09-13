@@ -74,7 +74,7 @@ export const MidiPort = ({ onSelectedInput, onSelectedOutput, onSelectBaseNote, 
               </Form.Select>
             </FormGroup>
             <FormGroup as={Row}>
-              <Form.Label column lg={4} htmlFor="selectNote">do note:</Form.Label>
+              <Form.Label column lg={5} htmlFor="selectNote">Major tonic (do):</Form.Label>
               <Col>
                 <Form.Select name="selectNote" aria-label="Select output" onChange={onSelectBaseNote}>
                   {selectableNotes}

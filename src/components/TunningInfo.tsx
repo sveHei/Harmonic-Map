@@ -5,7 +5,7 @@ type TunerProps = { selected: Set<string>, base: Note };
 export const TunningInfo = ({ selected, base }: TunerProps) => {
     let byMidiNote = byField("midiNote");
 
-    const tuningInfo = generateCorrections(selected).map((correction, midiNote) => {
+    const tuningInfo = generateCorrections(selected, base).map((correction, midiNote) => {
         function removeDuplicates(l: Array<any>) {
             return Array.from(new Set(l));
         }
@@ -18,7 +18,6 @@ export const TunningInfo = ({ selected, base }: TunerProps) => {
     });
 
     return <div>
-        <p>Base: {base}</p>
         <ul>
             {tuningInfo}
         </ul>

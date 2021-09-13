@@ -82,11 +82,12 @@ export function noteToChannel(midiNote: number): number {
     return naturalChannel >= 10 ? naturalChannel + 2 : naturalChannel;
 }
 
-export function generateCorrections(selectedNotes: Set<string>) {
+export function generateCorrections(selectedNotes: Set<string>, baseNote: Note) {
+    const offset = getBaseNoteOffset(baseNote);
     let corrections = new Array(numMidiNotes).fill(null); // Assume no correction
     for (let noteId of selectedNotes) {
         let note = byUniqueName[noteId];
-        corrections[note.midiNote] = note.pitchCorrection;
+        corrections[(note.midiNote + offset) % numMidiNotes] = note.pitchCorrection;
     }
     return corrections;
 }

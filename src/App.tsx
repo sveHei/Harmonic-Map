@@ -3,7 +3,7 @@ import WebMidi from 'webmidi';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
 import { HarmonicMap } from './components/HarmonicMap';
-import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, getBaseNoteOffset, PlayingNotes } from "./harmonicInfo";
+import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, PlayingNotes } from "./harmonicInfo";
 import { TunningInfo } from './components/TunningInfo';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Presets } from './components/Presets';
@@ -111,7 +111,7 @@ const App = () => {
         let output = WebMidi.getOutputById(selectedOutput);
         if (output) {
           sendTuning();
-          const playNote = event.note.number + getBaseNoteOffset(baseRef.current);
+          const playNote = event.note.number;
           output.playNote(playNote, noteToChannel(event.note.number), { velocity: event.velocity });
         }
       });
@@ -119,7 +119,7 @@ const App = () => {
       input.addListener('noteoff', 'all', (event) => {
         let output = WebMidi.getOutputById(selectedOutput);
         if (output) {
-          const stopNote = event.note.number + getBaseNoteOffset(baseRef.current);
+          const stopNote = event.note.number;
           output.stopNote(stopNote, noteToChannel(event.note.number));
         }
       });
@@ -154,7 +154,7 @@ const App = () => {
     // Rely note to output
     let output = WebMidi.getOutputById(selectedOutput);
     if (output) {
-      let corrections = generateCorrections(selectedRef.current.selectedNotes);
+      let corrections = generateCorrections(selectedRef.current.selectedNotes, baseRef.current);
       for (const [midiNote, correction] of corrections.entries()) {
         output.sendPitchBend(((correction ?? 0) / 100) / PITCH_RANGE, noteToChannel(midiNote));
       }
