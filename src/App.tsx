@@ -3,7 +3,7 @@ import WebMidi from 'webmidi';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
 import { HarmonicMap } from './components/HarmonicMap';
-import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, PlayingNotes, getMajorTonicNoteOffset } from "./harmonicInfo";
+import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, PlayingNotes, getMajorTonicNoteOffset, MapStage } from "./harmonicInfo";
 import { TunningInfo } from './components/TunningInfo';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Presets } from './components/Presets';
@@ -36,7 +36,6 @@ interface InputState {
 
 export type MajorTonicState = Note;
 export type ViewBaseNote = boolean;
-export type MapStage = "diatonic" | "harmonic" | "modal_interchange" | "modal_interchange_second_order" | "all" ;
 
 const App = () => {
   const [pressedState, setPressedState] = useState<PressedKeysState>({});
@@ -59,7 +58,7 @@ const App = () => {
   const majorTonicRef = useRef(majorTonicState);
   majorTonicRef.current = majorTonicState;
   const [viewBaseNoteState, setViewBaseNoteState] = useState<ViewBaseNote>(false);
-  const [mapStageState, setMapStageState] = useState<MapStage>("all");
+  const [mapStageState, setMapStageState] = useState<MapStage>("complete");
 
 
   useEffect(() => {
@@ -218,7 +217,7 @@ const App = () => {
                 <h4 className="card-title">View options</h4>
                 <ViewOptions
                   mapStage={mapStageState}
-                  onStateMapChange={setMapStageState}
+                  onStageMapChange={setMapStageState}
                   majorTonic={majorTonicState}
                   onSelectMajorTonicNoteChange={setMajorTonicState}
                   viewBaseNote={viewBaseNoteState}
@@ -246,7 +245,9 @@ const App = () => {
                 onClickNote={onClickNote}
                 selected={selectedState.selectedNotes}
                 majorTonic={majorTonicState}
-                viewBaseNote={viewBaseNoteState} />
+                viewBaseNote={viewBaseNoteState}
+                mapStage={mapStageState}
+                />
             </div>
           </Col>
 

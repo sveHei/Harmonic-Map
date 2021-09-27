@@ -1,20 +1,22 @@
 import React, { MouseEvent } from 'react'
 import HarmonicMapSvg from '../icons/HarmonicMap'; // Generated with https://svg2jsx.com/
-import { harmonicInfo, adjTable, PlayingNotes, byField, numMidiNotes, getMajorTonicNoteOffset } from '../harmonicInfo';
+import { harmonicInfo, adjTable, PlayingNotes, byField, numMidiNotes, getMajorTonicNoteOffset, MapStage, MapStageDefinition } from '../harmonicInfo';
 
 type HarmonicMapProps = {
   playingNotes: PlayingNotes,
   onClickNote: (ev: string) => void,
   selected: Set<string>,
   majorTonic: Note,
-  viewBaseNote: boolean
+  viewBaseNote: boolean,
+  mapStage: MapStage
 }
 
-export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic, viewBaseNote }: HarmonicMapProps) => {
+export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic, viewBaseNote, mapStage }: HarmonicMapProps) => {
   let highlightedStyle = "fill-opacity: 0.3;";
   let edgeHighlightedStyle = "stroke-width: 0.8;";
   let selectedStyle = "text-transform: uppercase;";
   let transparentCirclesStyle = "display: none";
+  let hiddenStyle = "display: none";
 
   const highlighted = MidiToNotes(playingNotes)
 
@@ -24,6 +26,7 @@ export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic, v
 
   // Generate the ids for the selected notes
   let selectedIds = generateSelectedIds(selected);
+  const hiddenIds = generateHiddenIds(mapStage);
 
   let onClickEvent = onClick(onClickNote);
 
@@ -32,6 +35,9 @@ export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic, v
   return (
     <div onClick={onClickEvent}>
       <style>
+        {hiddenIds.join(", ")} {"{"} {
+          hiddenStyle
+        } {"}"}
         {transparentIds.join(", ")} {"{"} {
           highlightedStyle
         } {"}"}
@@ -128,6 +134,11 @@ function generateSelectedIds(selected: Set<string>) {
   }
   return selectedIds;
 }
+
+function generateHiddenIds(mapStage: MapStage) {
+  return MapStageDefinition[mapStage].map((e) => "#" + e);
+}
+
 
 
 function MidiToNotes(midiNotes: PlayingNotes): Array<string> {
