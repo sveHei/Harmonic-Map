@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Col, Form, FormGroup, Row } from 'react-bootstrap';
+import { Form, FormGroup } from 'react-bootstrap';
 import WebMidi from 'webmidi';
-import { eqTmpNamePosition } from '../harmonicInfo';
 
 
-export const MidiPort = ({ onSelectedInput, onSelectedOutput, onSelectMajorTonicNote, webMidiStatus, selectedNotes }: PortProps) => {
+export const MidiPort = ({ onSelectedInput, onSelectedOutput, webMidiStatus, selectedNotes }: PortProps) => {
   const webMidiInitialized = webMidiStatus === "initialized";
   const [availableInputs, setAvailableInputs] = useState<Array<PortDefinition>>([])
   const [availableOutputs, setAvailableOutputs] = useState<Array<PortDefinition>>([])
@@ -48,8 +47,6 @@ export const MidiPort = ({ onSelectedInput, onSelectedOutput, onSelectMajorTonic
       availableOutputsArr.push(<option key={output.id} value={output.id}>{output.name}</option>)
     }
 
-    const selectableNotes = eqTmpNamePosition.map((note) => <option key={note} value={note}>{note}</option>)
-
     return (
       <div>
         <Form>
@@ -72,14 +69,6 @@ export const MidiPort = ({ onSelectedInput, onSelectedOutput, onSelectMajorTonic
                 <option id='outputs' key="initial_output">-- outputs --</option>
                 {availableOutputsArr}
               </Form.Select>
-            </FormGroup>
-            <FormGroup as={Row}>
-              <Form.Label column lg={6} htmlFor="selectNote">Major tonic (do):</Form.Label>
-              <Col>
-                <Form.Select name="selectNote" aria-label="Select output" onChange={onSelectMajorTonicNote}>
-                  {selectableNotes}
-                </Form.Select>
-              </Col>
             </FormGroup>
           </fieldset>
         </Form>

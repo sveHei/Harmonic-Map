@@ -6,10 +6,11 @@ type HarmonicMapProps = {
   playingNotes: PlayingNotes,
   onClickNote: (ev: string) => void,
   selected: Set<string>,
-  majorTonic: Note
+  majorTonic: Note,
+  viewBaseNote: boolean
 }
 
-export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic }: HarmonicMapProps) => {
+export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic, viewBaseNote }: HarmonicMapProps) => {
   let highlightedStyle = "fill-opacity: 0.3;";
   let edgeHighlightedStyle = "stroke-width: 0.8;";
   let selectedStyle = "text-transform: uppercase;";
@@ -19,7 +20,7 @@ export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic }:
 
   // Choose svg ids to hide
   let transparentIds = generateTransparentIds(highlighted);
-  let transparentCircles = generateTransparentCircles(playingNotes, majorTonic);
+  let transparentCircles = generateTransparentCircles(viewBaseNote? playingNotes: [], majorTonic);
 
   // Generate the ids for the selected notes
   let selectedIds = generateSelectedIds(selected);

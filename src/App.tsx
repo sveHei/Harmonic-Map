@@ -7,6 +7,7 @@ import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel
 import { TunningInfo } from './components/TunningInfo';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Presets } from './components/Presets';
+import { ViewOptions } from './components/ViewOptions';
 
 const PITCH_RANGE = 48;
 
@@ -25,7 +26,6 @@ let selectedOutput: string;
 
 
 type PressedKeysState = PlayingNotes;
-type MajorTonicState = Note;
 interface SelectedState {
   selectedNotes: Set<string>
 };
@@ -33,6 +33,10 @@ interface SelectedState {
 interface InputState {
   selected_input?: string,
 }
+
+export type MajorTonicState = Note;
+export type ViewBaseNote = boolean;
+export type MapStage = "diatonic" | "harmonic" | "modal_interchange" | "modal_interchange_second_order" | "all" ;
 
 const App = () => {
   const [pressedState, setPressedState] = useState<PressedKeysState>({});
@@ -48,11 +52,15 @@ const App = () => {
   const [inputState, setInputState] = useState<InputState>({});
   const previousSelectedNotes = usePrevious(selectedState.selectedNotes);
 
+
+  const [webMidiStatus, setWebMidiStatus] = useState<WebMidiStatus>("initializing")
+
   const [majorTonicState, setMajorTonicState] = useState<MajorTonicState>(eqTmpNamePosition[0]);
   const majorTonicRef = useRef(majorTonicState);
   majorTonicRef.current = majorTonicState;
+  const [viewBaseNoteState, setViewBaseNoteState] = useState<ViewBaseNote>(false);
+  const [mapStageState, setMapStageState] = useState<MapStage>("all");
 
-  const [webMidiStatus, setWebMidiStatus] = useState<WebMidiStatus>("initializing")
 
   useEffect(() => {
 
@@ -138,10 +146,6 @@ const App = () => {
     sendTuning();
   }
 
-  const onSelectedMajorTonic = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setMajorTonicState(e.target.value as Note);
-  }
-
   const sendPitchBendRange = () => {
     let output = WebMidi.getOutputById(selectedOutput);
     if (output) {
@@ -204,10 +208,21 @@ const App = () => {
                 <MidiPort
                   onSelectedInput={onSelectedInput}
                   onSelectedOutput={onSelectedOutput}
-                  onSelectMajorTonicNote={onSelectedMajorTonic}
                   webMidiStatus={webMidiStatus}
                   selectedNotes={selectedState.selectedNotes}
                 />
+              </div>
+            </div>
+            <div className="card mt-3">
+              <div className="card-body">
+                <h4 className="card-title">View options</h4>
+                <ViewOptions
+                  mapStage={mapStageState}
+                  onStateMapChange={setMapStageState}
+                  majorTonic={majorTonicState}
+                  onSelectMajorTonicNoteChange={setMajorTonicState}
+                  viewBaseNote={viewBaseNoteState}
+                  onViewBaseNoteChange={setViewBaseNoteState} />
               </div>
             </div>
             <div className="card mt-3">
@@ -230,7 +245,8 @@ const App = () => {
                 playingNotes={pressedState}
                 onClickNote={onClickNote}
                 selected={selectedState.selectedNotes}
-                majorTonic={majorTonicState} />
+                majorTonic={majorTonicState}
+                viewBaseNote={viewBaseNoteState} />
             </div>
           </Col>
 
