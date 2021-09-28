@@ -51,7 +51,7 @@ export const ViewOptions = ({ mapStage, onStageMapChange, viewBaseNote, onViewBa
         </fieldset>
         <fieldset className="mt-2">
           <FormGroup>
-            <Form.Check type="switch" label="Show base note" onChange={onViewBaseNote} />
+            <Form.Check type="switch" label="Show bass note" onChange={onViewBaseNote} />
           </FormGroup>
         </fieldset>
       </Form>

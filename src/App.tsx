@@ -58,7 +58,7 @@ const App = () => {
   const majorTonicRef = useRef(majorTonicState);
   majorTonicRef.current = majorTonicState;
   const [viewBaseNoteState, setViewBaseNoteState] = useState<ViewBaseNote>(false);
-  const [mapStageState, setMapStageState] = useState<MapStage>("complete");
+  const [mapStageState, setMapStageState] = useState<MapStage>("including Modal Interchange");
 
 
   useEffect(() => {
@@ -187,6 +187,8 @@ const App = () => {
   const onSelectedPreset = (preset: string[]) => {
     setSelectedState({ selectedNotes: new Set(preset) });
   }
+
+  // const onResetTuning = () => onSelectedPreset([]);
 
   if (webMidiStatus === "initialized" && !_.isEqual(previousSelectedNotes, selectedRef.current.selectedNotes)) {
     sendTuning();

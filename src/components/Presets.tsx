@@ -8,6 +8,7 @@ type PresetsProps = {
 };
 
 const infoPresets = [
+    { name: "equally tempered", list: [] },
     { name: "default", list: ["so1", "do1", "fa2", "la2", "mi1", "ti1"] },
     { name: "harmonic minor", list: ["so1", "do1", "fa2", "la2", "mi1", "ti1", "si1", "re2"] },
     { name: "harmonic major", list: ["so1", "do1", "fa2", "la2", "mi1", "ti1", "re1", "lo1"] },
