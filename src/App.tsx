@@ -234,7 +234,7 @@ const App = () => {
             </div>
             <div className="card mt-3">
               <div className="card-body">
-                <h4 className="card-title">Scales</h4>
+                <h4 className="card-title">Tuning presets</h4>
                 <Presets selected={selectedState.selectedNotes}
                   onSelectedPreset={onSelectedPreset} />
               </div>
