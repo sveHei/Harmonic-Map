@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Form, FormGroup } from 'react-bootstrap';
-import WebMidi from 'webmidi';
+import { WebMidi } from 'webmidi';
+
 
 
 export const MidiPort = ({ onSelectedInput, onSelectedOutput, webMidiStatus, selectedNotes }: PortProps) => {

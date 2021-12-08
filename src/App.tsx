@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import WebMidi from 'webmidi';
+import { WebMidi } from 'webmidi';
+//@ts-ignore
+import { EventEmitter } from 'djipevents';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
 import { HarmonicMap } from './components/HarmonicMap';
@@ -63,18 +65,15 @@ const App = () => {
 
   useEffect(() => {
 
-    WebMidi.enable((err) => {
-      if (err) {
-        console.log("WebMidi could not be enabled.", err);
-        setWebMidiStatus("error");
-      }
-      else {
-        console.log("WebMidi enabled!");
-        setWebMidiStatus("initialized")
-      }
+    WebMidi.enable().then(() => {
+      console.log("WebMidi enabled!");
+      setWebMidiStatus("initialized")
+    }).catch((err) => {
+      console.log("WebMidi could not be enabled.", err);
+      setWebMidiStatus("error");
     })
 
-  }, [])
+  }, []);
 
 
   const onSelectedInput = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -96,8 +95,10 @@ const App = () => {
 
     // Listen for a 'note on' message on all channels
     if (input) {
-      input.addListener('noteon', "all",
-        (e) => {
+
+      // Handle harmonic map visualization of notes
+      input.addListener('noteon',
+        (e: any) => {
           setPressedState((pressedKeys) => {
             const offset = getMajorTonicNoteOffset(majorTonicRef.current);
             // Module of negative number is negative
@@ -106,8 +107,8 @@ const App = () => {
           });
         }
       );
-      input.addListener('noteoff', "all",
-        (e) => {
+      input.addListener('noteoff',
+        (e: any) => {
           setPressedState((state) => {
             const pressedKeys = { ...pressedRef.current };
             delete pressedKeys[e.note.number];
@@ -116,21 +117,56 @@ const App = () => {
         }
       );
 
-      input.addListener('noteon', 'all', (event) => {
+      // Handle forward messages from input to output
+      input.addListener('noteon', (event: any) => {
         let output = WebMidi.getOutputById(selectedOutput);
         if (output) {
           sendTuning();
-          const playNote = event.note.number;
-          output.playNote(playNote, noteToChannel(event.note.number), { velocity: event.velocity });
+          output.playNote(event.note, { channels: noteToChannel(event.note.number) });
         }
       });
 
-      input.addListener('noteoff', 'all', (event) => {
+      input.addListener('noteoff', (event: any) => {
         let output = WebMidi.getOutputById(selectedOutput);
         if (output) {
-          const stopNote = event.note.number;
-          output.stopNote(stopNote, noteToChannel(event.note.number));
+          output.stopNote(event.note, { channels: noteToChannel(event.note.number) });
         }
+      });
+
+      input.addListener('noteoff', (event: any) => {
+        let output = WebMidi.getOutputById(selectedOutput);
+        if (output) {
+          output.stopNote(event.note, { channels: noteToChannel(event.note.number) });
+        }
+      });
+
+      //@ts-ignore
+      input.addListener(EventEmitter.ANY_EVENT, (ev: any) => {
+
+        // Skip NoteOn, NoteOff and PitchBend events
+        if (ev.message.type === "noteon" || ev.message.type === "noteoff" || ev.message.type === "pitchbend") {
+          return
+        }
+        let output = WebMidi.getOutputById(selectedOutput);
+        if (output) {
+          // Dispatch system messages
+          if (ev.message.isSystemMessage) {
+            console.log(ev);
+            output.send(ev.message);
+          }
+          // Dispatch channel messages
+          if (ev.message.isChannelMessage) {
+            let rawData = Uint8Array.from(ev.message.rawData);
+            for (let i = 0; i < numMidiNotes; i++) {
+              console.log(ev);
+              let channel = noteToChannel(i) - 1;
+              rawData[0] &= 0xf0;
+              rawData[0] |= channel & 0x0f;
+              output.send(rawData);
+            }
+          }
+        }
+
       });
     }
   }
@@ -150,7 +186,7 @@ const App = () => {
     if (output) {
       for (let i = 0; i < numMidiNotes; i++) {
         // TODO: Testing with Abbleton Live this doesn't seem to be working right. Setting it to the MPE default for now.
-        output.setPitchBendRange(PITCH_RANGE * 2, 0, noteToChannel(i));
+        // output.setPitchBendRange(PITCH_RANGE * 2, 0, noteToChannel(i));
       }
     }
   }
@@ -162,7 +198,7 @@ const App = () => {
       let corrections = generateCorrections(selectedRef.current.selectedNotes, majorTonicRef.current);
       console.log(corrections);
       for (const [midiNote, correction] of corrections.entries()) {
-        output.sendPitchBend(((correction ?? 0) / 100) / PITCH_RANGE, noteToChannel(midiNote));
+        output.sendPitchBend(((correction ?? 0) / 100) / PITCH_RANGE, { channels: noteToChannel(midiNote) });
       }
     }
   }
@@ -249,7 +285,7 @@ const App = () => {
                 majorTonic={majorTonicState}
                 viewBaseNote={viewBaseNoteState}
                 mapStage={mapStageState}
-                />
+              />
             </div>
           </Col>
 
