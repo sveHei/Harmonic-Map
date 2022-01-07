@@ -5,7 +5,7 @@ import { EventEmitter } from 'djipevents';
 import _ from 'lodash';
 import { MidiPort } from './components/ControlBar';
 import { HarmonicMap } from './components/HarmonicMap';
-import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, PlayingNotes, getMajorTonicNoteOffset, MapStage } from "./harmonicInfo";
+import { harmonicInfo, numMidiNotes, byField, generateCorrections, noteToChannel, eqTmpNamePosition, PlayingNotes, getMajorTonicNoteOffset, MapStage, adaptMessagetoChannel } from "./harmonicInfo";
 import { TunningInfo } from './components/TunningInfo';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Presets } from './components/Presets';
@@ -155,11 +155,6 @@ const App = () => {
             console.log(ev);
             output.send(ev.message);
           }
-          const adaptMessagetoChannel = (message: Uint8Array, channel: number) => {
-            message[0] &= 0xf0;
-            message[0] |= (channel - 1) & 0x0f;
-            return message;
-          };
 
           // Dispatch channel messages
           if (ev.message.isChannelMessage) {

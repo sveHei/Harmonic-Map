@@ -49,27 +49,27 @@ export const harmonicInfo: HarmonicInfo = [
 
 export const eqTmpNamePosition: Note[] = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
-export type MapStage = "diatonic" | "harmonic minor/major" | "including Modal Interchange" | "including Modal Interchange and second order (sub-)dominants" | "complete" ;
+export type MapStage = "diatonic" | "harmonic minor/major" | "including Modal Interchange" | "including Modal Interchange and second order (sub-)dominants" | "complete";
 
 function removeIds(n1: number, n2: number): string[] {
     let ids = [];
     ids.push(`note_${n1}_${n2}`);
     ids.push(`c_${n1}_${n2}`);
-    ids.push(`e_${n1-1}_${n2}\\3A ${n1}_${n2}`);
-    ids.push(`e_${n1}_${n2-1}\\3A ${n1}_${n2}`);
-    ids.push(`e_${n1}_${n2}\\3A ${n1+1}_${n2}`);
-    ids.push(`e_${n1}_${n2}\\3A ${n1}_${n2+1}`);
-    ids.push(`e_${n1-1}_${n2-1}\\3A ${n1}_${n2}`);
-    ids.push(`e_${n1}_${n2}\\3A ${n1+1}_${n2+1}`);
+    ids.push(`e_${n1 - 1}_${n2}\\3A ${n1}_${n2}`);
+    ids.push(`e_${n1}_${n2 - 1}\\3A ${n1}_${n2}`);
+    ids.push(`e_${n1}_${n2}\\3A ${n1 + 1}_${n2}`);
+    ids.push(`e_${n1}_${n2}\\3A ${n1}_${n2 + 1}`);
+    ids.push(`e_${n1 - 1}_${n2 - 1}\\3A ${n1}_${n2}`);
+    ids.push(`e_${n1}_${n2}\\3A ${n1 + 1}_${n2 + 1}`);
     return ids;
 }
 function rIds(coords: Array<[number, number]>) {
     return _.flatMap(coords.map(([n1, n2]) => removeIds(n1, n2)));
 }
 
-export const MapStageDefinition: {[key: string]: Array<string>} = {
-    "diatonic": rIds([[-2, -3], [-2, -2], [3, 3], [3, 2], [-1, -3], [0, -3], [1, -3], [0, 3], [1, 3], [2, 3], [-1, 2], [2, -2], [-1, -2], [1, -2], [-1, -1], [2, -1], [2, 1], [2, 2], [0, 2], [-1, 1], [-1, 0], [-1, 1], [2, 0] ]),
-    "harmonic minor/major":  rIds([[-2, -3], [-2, -2], [3, 3], [3, 2], [-1, -3], [0, -3], [1, -3], [0, 3], [1, 3], [2, 3], [-1, 2], [2, -2], [-1, -2], [1, -2], [-1, -1], [2, -1], [2, 1], [2, 2], [0, 2], [-1, 1] ]),
+export const MapStageDefinition: { [key: string]: Array<string> } = {
+    "diatonic": rIds([[-2, -3], [-2, -2], [3, 3], [3, 2], [-1, -3], [0, -3], [1, -3], [0, 3], [1, 3], [2, 3], [-1, 2], [2, -2], [-1, -2], [1, -2], [-1, -1], [2, -1], [2, 1], [2, 2], [0, 2], [-1, 1], [-1, 0], [-1, 1], [2, 0]]),
+    "harmonic minor/major": rIds([[-2, -3], [-2, -2], [3, 3], [3, 2], [-1, -3], [0, -3], [1, -3], [0, 3], [1, 3], [2, 3], [-1, 2], [2, -2], [-1, -2], [1, -2], [-1, -1], [2, -1], [2, 1], [2, 2], [0, 2], [-1, 1]]),
     "including Modal Interchange": rIds([[-2, -3], [-2, -2], [3, 3], [3, 2], [-1, -3], [0, -3], [1, -3], [0, 3], [1, 3], [2, 3], [-1, 2], [2, -2]]),
     "including MI and double (sub-)dominants": rIds([[-2, -3], [-2, -2], [3, 3], [3, 2]]),
     "complete": []
@@ -107,6 +107,12 @@ export function noteToChannel(midiNote: number): number {
     // Channels 10 and 11 are reserved for percussion
     return naturalChannel >= 10 ? naturalChannel + 2 : naturalChannel;
 }
+
+export function adaptMessagetoChannel(message: Uint8Array, channel: number): Uint8Array {
+    message[0] &= 0xf0;
+    message[0] |= (channel - 1) & 0x0f;
+    return message;
+};
 
 export function generateCorrections(selectedNotes: Set<string>, majorTonic: Note) {
     const offset = getMajorTonicNoteOffset(majorTonic);
