@@ -141,6 +141,7 @@ const App = () => {
       });
 
       //@ts-ignore
+
       input.addListener(EventEmitter.ANY_EVENT, (ev: any) => {
 
         // Skip NoteOn, NoteOff and PitchBend events
@@ -154,19 +155,28 @@ const App = () => {
             console.log(ev);
             output.send(ev.message);
           }
+          const adaptMessagetoChannel = (message: Uint8Array, channel: number) => {
+            message[0] &= 0xf0;
+            message[0] |= (channel - 1) & 0x0f;
+            return message;
+          };
+
           // Dispatch channel messages
           if (ev.message.isChannelMessage) {
             let rawData = Uint8Array.from(ev.message.rawData);
-            for (let i = 0; i < numMidiNotes; i++) {
-              console.log(ev);
-              let channel = noteToChannel(i) - 1;
-              rawData[0] &= 0xf0;
-              rawData[0] |= channel & 0x0f;
-              output.send(rawData);
+            // Most control change messages require to go on the master zone (channel 1) channel
+            // Some can go on the notes channel but are not required and all we have seen make sense to send to master
+            // This was added to support piano pedals
+            if (ev.message.type === "controlchange") {
+              output.send(adaptMessagetoChannel(rawData, 1));
+            } else {
+              for (let i = 0; i < numMidiNotes; i++) {
+                console.log(ev);
+                output.send(adaptMessagetoChannel(rawData, noteToChannel(i)));
+              }
             }
           }
         }
-
       });
     }
   }
