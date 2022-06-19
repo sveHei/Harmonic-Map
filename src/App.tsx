@@ -244,15 +244,11 @@ const App = () => {
         <Row className="justify-content-md-center"><Col ><h1 className="text-center">Harmonic Map</h1></Col></Row>
         <Row className="justify-content-md-center">
           <Col lg={4} style={{ maxWidth: "400px" }} className="pr-1">
-            <div className="card">
+            <div className="card mt-3">
               <div className="card-body">
-                <h4 className="card-title">Controls</h4>
-                <MidiPort
-                  onSelectedInput={onSelectedInput}
-                  onSelectedOutput={onSelectedOutput}
-                  webMidiStatus={webMidiStatus}
-                  selectedNotes={selectedState.selectedNotes}
-                />
+                <h4 className="card-title">Tuning presets</h4>
+                <Presets selected={selectedState.selectedNotes}
+                  onSelectedPreset={onSelectedPreset} />
               </div>
             </div>
             <div className="card mt-3">
@@ -275,9 +271,13 @@ const App = () => {
             </div>
             <div className="card mt-3">
               <div className="card-body">
-                <h4 className="card-title">Tuning presets</h4>
-                <Presets selected={selectedState.selectedNotes}
-                  onSelectedPreset={onSelectedPreset} />
+                <h4 className="card-title">Controls</h4>
+                <MidiPort
+                  onSelectedInput={onSelectedInput}
+                  onSelectedOutput={onSelectedOutput}
+                  webMidiStatus={webMidiStatus}
+                  selectedNotes={selectedState.selectedNotes}
+                />
               </div>
             </div>
           </Col>
