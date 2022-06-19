@@ -125,6 +125,21 @@ export function generateCorrections(selectedNotes: Set<string>, majorTonic: Note
 }
 
 
+export function filterByTuning(playedNotes: string[], selected: Set<string>): string[] {
+    function isCompatibleTuning(noteName: string): boolean {
+        const note = byUniqueName[noteName];
+        for (const selectedName of selected) {
+            const selectedNote = byUniqueName[selectedName];
+            if (selectedNote.midiNote === note.midiNote && selectedNote.uniqueName !== note.uniqueName) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return playedNotes.filter((note: string) => isCompatibleTuning(note));
+}
+
+
 const adj1: Array<Coord> = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const adjDiag: Array<Coord> = [[1, 1], [-1, -1]];
 // const adj2: Array<Coord> = [[1, -1], [-1, 1], [0, 2], [2, 0], [0, -2], [-2, 0]]; // Removed the non direct diagonals

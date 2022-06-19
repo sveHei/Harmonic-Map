@@ -1,6 +1,6 @@
 import React, { MouseEvent } from 'react'
 import HarmonicMapSvg from '../icons/HarmonicMap'; // Generated with https://svg2jsx.com/
-import { harmonicInfo, adjTable, PlayingNotes, byField, numMidiNotes, getMajorTonicNoteOffset, MapStage, MapStageDefinition } from '../harmonicInfo';
+import { harmonicInfo, adjTable, PlayingNotes, byField, numMidiNotes, getMajorTonicNoteOffset, MapStage, MapStageDefinition, filterByTuning } from '../harmonicInfo';
 
 type HarmonicMapProps = {
   playingNotes: PlayingNotes,
@@ -18,11 +18,11 @@ export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic, v
   let transparentCirclesStyle = "display: none";
   let hiddenStyle = "display: none";
 
-  const highlighted = MidiToNotes(playingNotes)
+  const highlighted = filterByTuning(MidiToNotes(playingNotes), selected);
 
   // Choose svg ids to hide
   let transparentIds = generateTransparentIds(highlighted);
-  let transparentCircles = generateTransparentCircles(viewBaseNote? playingNotes: [], majorTonic);
+  let transparentCircles = generateTransparentCircles(viewBaseNote ? playingNotes : [], majorTonic);
 
   // Generate the ids for the selected notes
   let selectedIds = generateSelectedIds(selected);
