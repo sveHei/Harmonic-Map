@@ -1,6 +1,6 @@
 import React, { MouseEvent } from 'react'
 import HarmonicMapSvg from '../icons/HarmonicMap'; // Generated with https://svg2jsx.com/
-import { harmonicInfo, adjTable, PlayingNotes, byField, numMidiNotes, getMajorTonicNoteOffset, MapStage, MapStageDefinition, filterByTuning } from '../harmonicInfo';
+import { harmonicInfo, adjTable, PlayingNotes, byField, byUniqueName, numMidiNotes, getMajorTonicNoteOffset, MapStage, MapStageDefinition, filterByTuning } from '../harmonicInfo';
 
 type HarmonicMapProps = {
   playingNotes: PlayingNotes,
@@ -19,10 +19,11 @@ export const HarmonicMap = ({ playingNotes, onClickNote, selected, majorTonic, v
   let hiddenStyle = "display: none";
 
   const highlighted = filterByTuning(MidiToNotes(playingNotes), selected);
+  //const playingNotesFiltered = Object.fromEntries(Object.entries(playingNotes).map(([k, v]) => [k, filterByTuning(v, selected)]));
 
   // Choose svg ids to hide
   let transparentIds = generateTransparentIds(highlighted);
-  let transparentCircles = generateTransparentCircles(viewBaseNote ? playingNotes : [], majorTonic);
+  let transparentCircles = generateTransparentCircles(viewBaseNote ? playingNotes : [], majorTonic, selected);
 
   // Generate the ids for the selected notes
   let selectedIds = generateSelectedIds(selected);
@@ -98,7 +99,7 @@ function generateTransparentIds(highlighted: string[]) {
   return transparentIds;
 }
 
-function generateTransparentCircles(playingNotes: PlayingNotes, majorTonic: Note) {
+function generateTransparentCircles(playingNotes: PlayingNotes, majorTonic: Note, selected: Set<string>) {
   const offset = getMajorTonicNoteOffset(majorTonic);
 
   function range(size: number, startAt: number = 0): ReadonlyArray<number> {
@@ -109,7 +110,11 @@ function generateTransparentCircles(playingNotes: PlayingNotes, majorTonic: Note
   if (Object.keys(playingNotes).length > 0) {
     const baseNote = Math.min(...Object.keys(playingNotes).map(i => Number(i) - offset));
     const byMidiNote = byField("midiNote");
-    svgIds = new Set(byMidiNote[(baseNote + numMidiNotes) % numMidiNotes].map(e => e.svgId));
+    // Ugly conversion, better refactor filterByTuning to avoid the double conversion
+    const harmonicEntries = byMidiNote[(baseNote + numMidiNotes) % numMidiNotes];
+    const notes = harmonicEntries.map((e) => e.uniqueName);
+
+    svgIds = new Set(filterByTuning(notes, selected).map(e => byUniqueName[e].svgId));
   } else {
     svgIds = new Set();
   }
